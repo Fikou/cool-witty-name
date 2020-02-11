@@ -1,0 +1,34 @@
+################
+Currently working on:
+################
+	
+	Changelings
+
+	1) Headspiders transferring to non-lings DONE
+	2) Headspiders transferring to lings 
+	2) Changelings absorbing other changelings with hivemind members in them DONE
+
+
+################
+Death 2 lag
+################
+	
+	
+	
+################
+Trophy wall (killed lag)
+################
+
+	- TempEngine.dm , furnace.dm
+		* Furnace line 522
+			' Doing a bunch of new images / overlay operations every process()
+		
+	- canister.dm
+		* Overlay shenanigans on every process()
+		
+	-Status_Controller.dm
+		* AI Stuff is fine
+		* It'd be easier to list what's not wrong with the status_display, though
+		
+	- UpdateOverlays.dm
+		* Major lag death

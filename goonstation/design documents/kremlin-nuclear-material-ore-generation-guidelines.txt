@@ -1,0 +1,89 @@
+ == NUCLEAR MATERIAL GENERATION GUIDLINES ==
+ ==       BY KREMLIN, FOR AZUNGAR         ==
+
+ == PREFACE ==
+ 
+This document outlines how the ore generation for the fissile material ("nuke engine") subsystem 
+should work. Ore should be generated in the normal mining magnet scheme where, upon mining magnet 
+activation, a roll is performed to see how many (if any) fissile ores are generated. This will be 
+expanded on shortly.
+
+	Gaussian Rolls
+	(ref: goonstation/code/unused/gaussianKernelProcs.dm)
+	
+Critical to the balance aspect of ore generation, you should learn and make use of the gaussian() 
+proc which returns "random" numbers centered around a normal gaussian distribution curve. This is 
+to say, unlike a normal rand() which returns any values between the boundaries at random intervals, 
+gaussian() will return values mostly around the peak of the curve. For example, a curve centered 
+around 50 should return most usually numbers 40-60, and much less usually any other numbers.
+
+For better understanding, reference the below plot of a gaussian curve centered around 500 with a 
+generous standard deviation (sigma):
+
+
+   0.02 +-+-----+--------+-------+------****------+-------+--------+-----+-+
+        +       +        +       +    **  + **    +       +        +       +
+  0.018 +-+                          **      **           gauss(x) *******-+
+        |                           *          *                           |
+  0.016 +-+                         *          *                         +-+
+        |                          *            *                          |
+  0.014 +-+                       *              *                       +-+
+        |                         *              *                         |
+  0.012 +-+                      *                *                      +-+
+   0.01 +-+                     *                  *                     +-+
+        |                      *                    *                      |
+  0.008 +-+                   *                      *                   +-+
+        |                     *                      *                     |
+  0.006 +-+                  *                        *                  +-+
+        |                   *                          *                   |
+  0.004 +-+               **                            **               +-+
+        |                **                              **                |
+  0.002 +-+            **                                  **            +-+
+        +       +   ***  +       +        +       +       +  ***   +       +
+      0 ************-----+-------+--------+-------+-------+-----************
+       100     200      300     400      500     600     700      800     900
+
+
+	Nuclear Knobset
+	(ref: goonstation/code/modules/power/nuke/knobs.dm)
+	
+Please read the header in the above file, reprinted below:
+
+				/************************************************
+				 *                                              *
+				 *  NUCLEAR ENGINE MASTER CONTROL COEFFICIENTS  *
+				 *                                              *
+				 ************************************************
+
+				 This file defines a "knob set" datum containing
+				 various coefficients/parameters/modifiers/factors
+				 used by the nuclear engine. This is meant to
+				 provide an easy, single interface for balancing
+				 the reactor's operation in a gameplay context
+
+				 This datum should only be instantiated ONCE per
+				 game by the reactor (fchamber) New() function,
+				 all consumers of the knobset should reference only
+				 the fchamber's knobset. This ensures modifications
+				 to the knobset affects all consumers equally.
+				 */
+ 
+You will need to create and access several variables in the above knobset following the format the 
+established in the subsequent file. To access them, use the globally-defined nuke_knobs (in global.dm). 
+This datum is created by the nuke, and should not be re-created.
+
+ == IMPLEMENTATION ==
+
+For every instance of the mining magnet being activated (a new asteroid being "sucked in" (generated), our code 
+should roll to see how many/if any fissile materials are included. You should premise this likelihood on a knob 
+variable as described above. For now, the rate you choose fissile ores to be generated at doesn't matter, but it 
+should be defined as a knob so we can easily change it later.
+
+Fissile ores should be generated as a generic "Unidentified Fissile Ore" or similar object. These objects should 
+emit/inflict both regular radiation and neutron radiation to unprotected organic entities handling them directly. 
+
+Define a class member variable to the nuclear ore type named "nuke_ore_quality" or similar. Assign it a value 
+generated from the aforementioned gaussian system a number centered around 500 as in the above graph. This will be 
+used to populate its nuclear material parameter values.
+
+7/9/2019 -- more to be added later

@@ -1,0 +1,19 @@
+TOOLS REFACTOR
+==============
+
+Make tools behave consistently via `tool_flags` var on `/obj/item`.
+Deal with edge cases, e.g. improvised tools, surgery, insulated tools (wirecutters) vs. uninsulated (scissors).
+
+MONKEY SUITS
+============
+
+Keep spriting monkey versions of any and all clothing.
+Come up with a way to make hats look a little better (x-offset dependent on direction)
+
+CYBORG REFACTOR
+===============
+
+Move cyborg tools around to make better modules.
+Create generic omnitools to save slots (part of tools refactor) for medical omnitool and maybe others.
+Whitelist items that work when part of a cyborg module, allow creation of random modules (found in crates).
+

@@ -1,0 +1,2324 @@
+
+sanitizing error handler logs if you just want the fucking error message and not all the accoutrement:
+FIND: ^.*Error: (.*) \| url:.*$
+REPLACE: \1
+bonus version to preserve timestamp:
+FIND: ^(\[\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d\]).*Error: (.*) \| url:.*$
+REPLACE: \1 \2
+
+
+
+
+
+=====================
+GRAND PLAN FLOCKDRONE
+=====================
+
+TODO: 
+
+	bugfixes:
+		- do not gib AI eyes inside mobs
+		- foreign flocktraces/flockminds jumping into flockless drones should be evicted
+		- why wrestling pants so many resources??
+			
+	features/QoL changes:
+		- sonic stun weaker stun
+		- sonic stun 30 second cooldown
+		- open all doors 10 second cooldown
+
+		- flockmind put down building ghosts
+		- flockdrone build on building ghosts
+		- flockdrone npc high priority work on building ghosts
+
+	QoL/balance changes for later:
+		- resources: burn time / inverse size, so small long burning things like shoes and paper bins won't be as ridiculously expensive
+			- leave this until much later because it will require a ton of rebalancing
+		- tg style huds?
+		- when floorrunning deplete resources at rate of 1 per second, if resources at 0 kick them out
+
+
+	flockmind context menu: click on drone to select and right click elsewhere to make them:
+		- move
+		- convert tile (if resources)
+		- build barricade (if resources and converted)
+		- lay egg (if resources and converted)
+		- attack target (if conscious)
+		- cage target (if unconscious)
+	drop menu if left click elsewhere
+
+	(flockdrone context menu: click on thing to provide options for conversion?)
+
+	table deconstruction (nanite spray on harm intent)
+	locker deconstruction (nanite spray on harm intent)
+	drone dissection (nanite spray on harm intent, butcher)
+	wall/door deconstruction (nanite spray on harm intent)
+	wall construction (nanite spray on floor, any intent but harm or disarm)
+		- only tear down internal walls
+			- breaches risk loss of resources
+	door construction (nanite spray on wall, any intent but harm)
+	break down /obj/machinery into RESOURCE BLOCKS
+	
+	make sure flockdrones are stunnable
+		double check they give visual indication
+		stunned flockdrones have no overlay
+
+	
+	add health overlay!! make it a diamond instead of a heart because fluid containers
+	
+	- make npc flockdrones afraid of plasma
+	- make npc flockdrones distracted by birds
+
+
+
+	when a drone leaves the station z level it doesn't get counted towards survival totals
+		if a flockdrone leaves the station z level they should get kicked out of the flock
+		they get to exist but they'll dispatch a notification that they've left signal range and their flock will be null	
+	
+	add flockmind ability to toggle hearing radios and silicons better but at cost of leaking flock transmissions
+	
+	add ability to observe flockmind/flockdrones/whatever
+
+	make flockmind egg spawn throw a bunch of eggs around and spawn a bunch of flockbits to start converting turfs
+		actually instead of spawning an egg, spawn a structure that:
+			a) converts the nearest tiles (2 tile radius?) into flock tiles
+			b) spawns four eggs
+			c) alerts all flockmobs to its creation
+			d) shatters into four resource caches with 50 resources each
+
+	redo abilities: instead of being points based, they should be based on FLOCK LEVEL, a concept influenced by number of drones and existing array
+		- drone count, array
+		- each array requires a certain number of drones to be built (thus preventing the one drone running around problem)
+
+	flockmind heal should be a blanket heal all in range (but weaker) with a cooldown
+	
+
+
+	
+
+
+	flockdrone overlays that indicate their current task (or a special asterisk if they're free willed)
+		also means flockmind and flockdrones always know where each other are
+	have a queue for items to consume (maybe like 3 items?)
+		- show breakdown process
+
+	medal for flockmind victory - You Can't Stop The Signal
+		- it's there, it just needs to be tied in	
+	flock vision modes:
+		done - normal (optical, only flockdrones have this)
+		- radio (show radio signal sources, colourcoded by recency (hook into the signal stuff), no limit by distance)
+		done - groupmind (show everything all fullbright but colour messed up, perfect but annoying vision)
+
+
+		- broadcast should give out a massive EMP blast, extreme ear damage, massive bleeding, radiation to the extreme, and comms being utterly destroyed
+
+	
+
+FEATURE IDEAS/GOALS
+	the flockmind has managed to transmit itself onto the station via a powerful long range burst acting on an age old directive to seek something long forgotten
+	however it is running out of power to sustain itself and has enough juice left to fabricate one egg
+	it needs to establish a forward base and power supply in order to develop a signal transmitter that will broadcast itself and its partitions onwards in its journey
+	its survival is dependent on it turning this station into a big old relay tower, and if the crew resists they must be destroyed
+	SPECIALIST STRUCTURES
+sprited	COLLECTOR: generates power based on longest cardinal direction of flock tiles adjacent, draws power from power net if it's above a certain threshold		
+		PYLON: wirelessly transmits power between floor generator clusters
+sprited	NEST: when fed with resources, produces an egg per 30 resources and hatches it more quickly, placing a cage over the nest will result in the player being ghostised immediately and spat into resource cubes
+DONE	BARRICADE: a weak barrier that flockdrones can traverse fine but that anything else will need to break down
+		CACHE: stores resources and can distribute them to other structures connected by flocktiles		
+sprited	ARRAY: three of these need to be constructed before construction of the relay can begin, any radio messages transmitted near them are garbled
+		INTERDICTOR: a repelling defensive structure that zaps anyone who touches it directly
+sprited	RELAY: the ultimate goal of the flockmind is the construction and activation of this structure
+			activating this structure will let everyone on the station know where it is
+			successful activation of the structure will result in a shuttle call and the conversion of the entire station in a spiral outwards (loose items are changed into a resource crystal)
+			flocktraces get a subset of flockmind abilities (stun, transmission, gatecrash)
+			flockdrone npcs switch to new ai behaviour that is aggressive towards everyone (consider anyone an enemy)
+			ghosts can click flockdrones to jump into them
+sprited RIFT: starting structure, produces four eggs and converts nearby tiles, then breaks apart into resource caches
+
+
+tier system: (can only build next relay if meeting next tier requirements)
+		TIER 0:
+			- 0 arrays
+			- start as this, dopey
+			- no player radio
+		TIER 1:
+			- 1 array
+			- garbled player radio
+		TIER 2:
+			- 2 arrays
+			- lightly garbled player radio
+		TIER 3:
+			- 3 arrays
+			- clear player radio
+		TIER 4:
+			- 4 arrays
+			- clear radio on all sides
+			- get that relay up!!
+
+	instead of break relay to win game, the players need to hunt down and destroy all the arrays
+		as each array is destroyed, the relay takes an additional 200 seconds to ping off
+		destroying the relay destroys the flockmind and all drones in the flock
+
+
+SPRITEWORK
+
+resource cache - 1x1 obj, probably a cube
+
+redo cracked layer for array and relay: less regular, more asymmetrical, patches of damage, some undamaged, some super damaged with big gashes
+don't forget cracked + cracked/lightning sprite layers for each structure
+
+BUILD EFFECTS:
+- deconstruct 1x1
+- build cage 1x1
+- build lattice 1x1
+- special structure build 1x1
+- special structure build 3x3
+- relay build 5x5
+
+
+
+
+==============
+
+FLOCK VERSION #NEVER
+MAYBE ANOTHER TIME
+	flockmind disaster round- instead of burning/eating the solarium goon server, stick a flockdrone's brain aka processor whatever into it, allowing the flockmind to take control
+	MAKE IT SO THAT YOU CAN CHOOSE THE FLOCK COLOUR
+	DRONE AUGMENTS
+		AWARENESS: get a player to pilot the drone
+		LETHALITY: replace the incapacitor with a no-stun high-damage thermal laser weapon (eliminator), slow firing but high damage
+		EFFICIENCY: have the drone process items twice as fast with twice as much resources recovered
+		PRODUCTIVITY: have the drone build in half the time
+		INTEGRITY: the drone has double health
+	flockstorm - 5x5 mob, intangible
+
+==============
+
+RESPAWN PANEL
+- verb under ghost commands
+- select things to respawn as
+	- ghost drone
+	- vr ghost
+	- animal
+	- afterlife bar
+	- any current valid calls for respawning as a thing
+
+GHOST NOTIFICATIONS
+- more things to jump to (not necessarily observe) for ghosts
+	- events
+
+- graphical display for ghost notifications
+	- add graphical icons to notifications
+	- display in dialogue
+	- also display on a sidebar for ghosts (a ghost hud, maybe?)
+		- definitely add a preferences thing
+
+- add more granularity to respawn notifications
+
+- change random invasion antag to use ghost notification system
+- change santa to use ghost notification system
+- change krampus to use ghost notification system
+
+
+misc little features:
+- use screwdriver on cyalume saber / toy sword to remove bulb (does not stop function but changes colour to white)
+- put coloured light bulb into saber/toy to change its colour
+
+
+lore notes:
+- the channel was discovered when mining corporations started tapping out our solar system
+- they found the channel -within- an asteroid. for whatever reason, due to the anchors of the channel, it -can- be moved. it's a moveable wormhole. it's kinda weird.
+- we do not know who "made" the channel, but the fact that the channel appeared in the centre of an asteroid just screams stargate to me (people bury stargates to prevent their worlds from being accessed)
+- we also do not know if the channel has actually been -moved- to the moon yet
+- the channel is effectively a wormhole that throws you from one part of the universe to the other. the distance is something ridiculously like 1 trillion lightyears or whatever according to an image that AIBM shared with me
+- channel tiles same tiles as for timeship
+- plasma remains of a long dead ~something~
+- plasma is growing out of the moon though
+	- sounds like the 3D intersection of a higher dimensional thing to me (think a sphere going through a 2D plane)
+- the ainley spectre has gone past plasma sickness into something beyond
+
+- use carcosa tiles for flockmind place
+
+
+
+STUFF FOR BROKEN TRADER SHIP:
+- make a flock totem thing that combines items together with a bunch of fun silly combos
+- give them a flockblocker telejammer and a telecrystal to make a flock locator matrix
+- combine the flock locator matrix with the space thing to make a flock location beacon
+- try to teleport the flock location beacon to instead destroy it and create a perm portal
+- the perm portal will send people to the flocktrader ship, UNLESS they have read the king in yellow, in which case they will end up in the flock nowhere ship
+	- also a 0.01% chance to go there without having read the king in yellow
+
+
+
+
+
+
+FLOCKTRACE LU.A
+- hates sa.le
+- is being consumed slowly
+- will gleefully give out flock secrets for the right payment
+- has a table in front of it to inspect items, will eat them afterwards
+- if attacked will stun the attacker and dump them into ship disposal
+
+
+
+
+
+
+
+
+other ideas i had for setpieces were a wizard explorer's  small camp, with the wizard's apprentice keeping things secure until they return with more supplies, and the wizard's apprentice is a robuddy with a wizard hat named merlin whose only "spell" is "magic missile" which is just a taser bolt
+
+- foggy mesa (change fade to cloud, make it BILLOW, MAKE IT BEAUTIFUL)
+- make the ground crimson red
+
+X11
+Rho NT outpost
+atmosphere needs to be super fucking terrible
+- thick, hot
+- lot of carbon dioxide
+82% CO2, 16% N, 2% Ar
+332 K
+315 kPa
+
+flockship internal atmosphere: low pressure neon gas
+
+Rho was originally a signal observatory
+
+...got it, rho was both an outpost to study X11 and also to study signal processing technology and might have also been involved in some signal snooping stuff (i am very technical)
+they pick up on the crashed flockship because it's going to be screaming on basically all frequencies possible as bits and pieces of it eject and transmit away
+so maybe they have some kind of... cirr, no, zipline is not an appropriate form of transport between outpost and crash site
+still, some sort of transit from outpost to site [pick letter later]
+actually it would be kind of amazing if they were working on technology inspired by the voltron to transmit people as signals, what with all the... unfortunate problems of teleportation
+and that's how they even pick up on flockdrone signals as being things that aren't just weird radio static
+
+
+Rho was a research station looking into varying forms of matter projection via conversion into signals
+the voltron was their best prototype but failed to enter mass production due to exhorbitant costs and design flaws (degradation of pattern buffer)
+
+
+
+
+
+
+
+internal flockmind disagreement
+
+the crashed ship's occupant is do.re
+(also use me.fa, so.la and ti.do if necessary)
+its rogue self-destructive trace is fa.e
+
+the "traitor" flocktrace sa.le is trying to eat is lu.a
+
+
+do.re hates sa.le for trading with aliens so freely
+sa.le hates do.re for stealing its shit while it was incapacitated
+
+
+
+
+
+so what happened on the ship?
+
+initial crew is 7 people
+originally 15 people but 8 were recalled for unexplained reasons (read: found to have syndicate ties or sympathy)
+1 is a cyborg who us part of exploration group 1
+
+when the crew of research station Rho come across it, they're cautiously regarded by do.re as an unexplained batch of recon drones
+do.re has knowledge of english from a prior iteration's processing of human signals, and so is able to communicate (tersely) with the Rho crew
+Rho crew send a couple people to investigate, they don't come back but report back saying everything is fine
+eventually find out that the two died in an accident when being shown some things and do.re is mimicking them to avoid being discovered
+crew try to storm the ship, end up imprisoned by an alarmed and afraid do.re who accidentally kills all but three of the crew trying to pacify them
+
+of the remaining three, one is understanding but freaked out, another is too sympathetic for the alien, and the third one tries to plan an escape 
+
+escaper ends up trapped in underground caverns, ends up committing suicide rather than die slowly of dehydration
+
+freaked out guy loses it, trips and falls into disposal system, do.re tries to reroute them but one of its flocktraces asserts itself in its last act before disobedience causes its end to destroy alien scum
+
+do.re is alone, having had to absorb its flocktraces for attempted rebellion, having heard from no other flockminds or signal variants, and only has one human left for company who wants to know more and wants to be part of the flock 
+
+so do.re merges with her, both becoming something more, forming the Ascendant, a mixture of flock and human that worked well, and that is the creature now living on the ship, waiting to fly out and spread the word and form a collective intellect from humanity whether they agree or not
+
+
+the ship itself:
+
+- two levels
+	- underground level embedded into planet (core functions)
+	- level on the surface of the planet (ancillary functions)
+
+a sophisticated conveyance system of tubes being used because transmuting things to energy and back is lossy and only best done in dire situations
+
+each room should have a terminal with a log between do.re and its flock traces
+
+core functions
+- gnesis generation / recycling room
+	- raw materials gathered from mining are converted into gnesis by being submerged into its vats
+	- disposals also routes into the gnesis tanks
+	- any matter not capable of being processed as is is scheduled to be broken down by drones
+
+	- unique assets:
+		- CONTROLLER
+			- ship controller needs to update on a slow loop, manage statuses of NPCs and assign jobs to things as and when they're needed
+			- for this room:
+				- check for damage
+					- send idle maintenance drone to fix the damaged thing, track thing until fixed
+				- check for unexpected items / prone individuals
+					- start a timer on each new unexpected item / prone individual
+					- if there for longer than 10 seconds, send idle drone to drag it to a vent, track item until inside a gnesis chamber
+				- check for fluid spills
+					- send idle maintenance drone to clean up spill, flag spill as being handled
+		- CHEMICALS 
+			- tumultuous gnesis (flockdrone_fluid_angry)
+				- like flockdrone_fluid but more aggressive, instead of converting things to flockdrone stuff it just converts everything it touches into more of itself
+					- inside a proper container it will only act on the contents of its container
+					- otherwise it will consume its container until it reaches a turf/fluid as its container
+		- ANCHORED
+			- recycling router
+				- connected to the two containment tubes
+				- dumps anything that comes in into the emptier tube
+			- gnesis containment tube
+				- two of them 
+				- a cryotube-sized structure that visually fills with tumultuous gnesis
+					- it should look active and violent, electrical
+				- any coagulated gnesis that ends up in the tube instantly becomes tumultuous gnesis
+				- drains down to a minimum of 20 units into a conversion tube
+				- can be broken with enough force, will then cause the dispatch of a maintenance drone
+				- objects get thrown into the tube to be converted into gnesis
+			- gnesis deactivation tube
+				- converts tumultuous gnesis into coagulated gnesis
+				- when it's all converted, flushes through into reshaping room
+			- disposal tubes
+				- links vents to the two gnesis containment tubes
+				- fake this: if something goes into the system, don't physically move it around, just send it to the output with a time for it to be released
+					- if a player goes in do it more properly, though
+			- disposal vent
+				- a floor-mounted vent that sends things into disposal tubes when triggered
+				- triggered by maintenance drones when foreign objects are left on the floor too long
+				- also if someone lies on the ground for too long
+			- emergence panel
+				- a floor-mounted panel that flockdrone variants can materialise from
+				- or move between freely
+		- ITEMS
+			- (claretine chunk)
+			- red rock
+				- could probably get away with just colouring a rock red
+		- TURFS
+			- ship drainage panel
+				- any fluid that falls onto it gets pumped back into the gnesis containment tube
+			- ship walls
+			- ship floors
+		- NPCS
+			- maintenance drone
+				- a flockbit variant that usually sits by idly and does not make its own decisions
+					- all ship functions should be centralised to avoid lag
+				- sent by the ship control to:
+					- repair damage
+					- clean things up (move debris to recycling vent)
+					- clean up fluids like a janitor
+
+
+
+- reshaping room
+	- raw resources and pure gnesis are shaped into materials and sent to the material cache
+
+	- unique assets:
+		- ANCHORED
+			- gnesis storage
+				- basically just another big tube fulla gnesis
+				- breaking it should cause it to start leaking
+			- gnesis fluid tubes
+				- breaking them should sever links between connected devices
+				- automatically sealing (animation of broken tubes sealing themselves)
+				- should glow when moving fluids within them (controlled by central controller as part of centralised pipe network controller)
+			- fabricator
+				- probably like six of these
+				- takes an amount of gnesis in (50?)
+				- looks like a centrifuge when in action, just lots of whirring
+				- maybe concerning sparking?
+				- spits out completed object for a fabricator drone to move
+				- object is a random one out of the potential list (dont bother modelling actual choices)
+				- can drop certain objects into a fabricator for it to either be:
+					- ejected immediately
+					- processed into something else
+		- NPCS
+			- fabricator drone
+				- flockbit variant like the maintenance drone
+				- oversees the fabricator units
+				- sets up what they make
+				- moves completed items to material cache room
+
+
+- material cache, with materials already formed into useful structures and resource blocks
+	- lots of flockdrone spare parts such as organs
+
+	- unique assets:
+		- ANCHORED:
+			- part rack
+				- contains a bunch of parts densely packed together in a rack form
+				- (might need to copy weapon racks)
+			- resource block crate
+				- a dense block that no one will have a hope of doing anything with
+				- basically a solid teal transclucent cube with smaller cubes inside slowly sliding around
+			- defense turret
+				- triggers if anyone tries to steal anything
+				- fires stunning bolts while a more capable security drone can show up
+		- NPCS
+			- security drone
+				- wasp-like flockdrone
+				- given a target, which it will attempt to handcuff and then throw out of the ship
+				- if sufficiently angered, will attempt to delimb and throw into recycling
+
+- rapid assembly room
+	- flockdrone organs assembled into complete unit
+	- complete unit transmuted into storage cube for easier storage
+- fractal energy extractor, extracting zero point energy via a microsingularity
+- mining bay
+	- specialised flockdrones are mining in the underground that the ship is embedded in
+
+ancillary functions
+- security checkpoint at the entrance
+	- one dormant and one broken flockguard
+		- dormant flockguard is actually completely trashed internally, and is pending transport to disposals
+	- anyone perceived as having hostile intent immediately will get stunned and thrown into the disposal system by a specialised flockdrone emerging from the walls
+		- if you attack anything, ANYTHING on the ship with a damage dealing item, marked as hostile
+- museum room, containing bits and pieces from Source like native flora and fauna and cultural artifacts
+- environmental simulation unit, capable of:
+	- Threshold Satellite 11 environment (X11/Rho environment)
+	- Source environment (dark with cold-hue glowy fluid and flora and fauna)
+	- Terrene environment (earthlike)
+	- Auric environment (liquid gold, incredibly fucking hot and radioactive, no atmosphere)
+	- Cryonic environment (basically the ice moon)
+	- H#./-nO enviroment (the void with eldritch tentacles)
+- human quarters based on a loose understanding of human requirements, o2 in environment instead of neon
+	- food? edible nutrient boxes that look like plastic, taste like raw MSG or sugar, and have the texture of hard gelatin
+	- sleep? "human recharger" pods that emit resonance frequencies that make humans fully rested, but fucks with sense of time as a result
+	- water? pure distilled water because that one is required for the flockship for other purposes where heat can't just be dissipated away and gnesis is too costly
+	- toilet? impromptu plumbing to the rest of the disposals system with a weird pod to sit on
+	- hygiene? recycled water heated to room temperature in a shower cubicle
+	- fun? that's what the simulation unit and museum rooms are for
+	- a little meeting area for the human guests to meet and talk to their gracious host do.re
+- an "augmentation" bay primarily for installing flock eyes but can also "refit" drones/humans with missing parts
+
+
+loot:
+- flockeye that interfaces between human brain and flock protocols, allowing flock identification of things and using their weird computer systems
+- all the flock organs you can eat
+- conversion tool
+- 
+
+
+
+
+new flock organs
+
+brain - odd crystal
+heart - pulsing octahedron
+
+butt - shimmering array
+- allows flock farts but also allows sending and hearing flock transmissions, SOMEHOW
+eye - smooth cabochon
+- allows seeing things as flock inspect things, two eyes allow seeing radio vision
+
+limbs: assembled from a fibrous bundle and a dropped limb part
+can just be applied to user without surgery, they'll integrate themselves (and cause brute damage and stun from the process)
+
+arm (converter) - segmented nozzle (fibrous bundle + hexagonal mister)
+- works like a flockbit spray at the cost of a limb
+arm (incapacitor) - arched barrel (fibrous bundle + grooved cylinder)
+- works like an incapacitor but has a shorter recharge time
+arm (gripper) - slinking grasper (fibrous bundle + gripping claw)
+- just works like a normal hand except it doesn't feel burns
+
+leg - N-configuration assemblage / Z-configuration assemblage (can be toggled in hand or as body action) (fibrous bundle + fibrous bundle + gripping claw + repulsor toroid)
+- swap between slow plodding pace (Z) or booster pace that can't be easily controlled and will cause damage/stun if you collide with anything
+
+repulsor toroid - can't be inserted as an organ but can be used to become weightless, uselessly, like negative matter effect
+
+lung - fractal cage
+- 1 heals oxy damage slowly and halves losebreath, 2 obviates the need to breathe at all
+kidney - feathered spiral
+- heals tox damage over time, 2 heals it faster
+spleen - gelatinous mass
+- where the heart produces gnesis, the spleen consumes it and turns it into passive brute and burn health, in some bizarre alien reversal
+liver - coiled helix
+- purges any toxic chemicals at 5x rate
+pancreas - needly cone
+- removes radiation at the cost of some brute damage
+appendix - balanced tube
+- removes any mutations from host and asserts a mutation free existence 
+stomach & intestines - disintegration reclaimer (requires both gone to install)
+- allows user to eat anything like with matter eater and convert it into buffs and more gnesis
+
+
+>70% flock organs? become an adherant (flock-cult-man-thing)
+- warning messages beforehand
+- if the player isn't an antagonist, restrict patrons to the less disruptive ones
+- flockmind patron
+	- proselytizer: a flockmind partition that wants you to convert the station to be suitable for them
+	- pretender: a flockmind partition that wants to usurp the eldritch entities and will use anything they can to do so
+	- observer: a flockmind partition that wants all knowledge it can get, at all costs
+	- iconoclast: a flockmind partition that wants to destroy anything it finds for any number of reasons
+- cool new abilities and an identity meter
+- identity meter slowly returns to normal if left alone
+- identity meter used up by using powers
+	- powers use up a random amount of self-identity when used
+- running out of identity has different effect depending on flockmind patron
+	- proselytizers will cause the adherant to detonate into flock conversion wave and 2-4 flockbits
+	- pretenders will warp the adherant into some other dimension without a trace
+	- observers will cause the adherant to turn into a more obedient structure to observe things
+	- iconoclasts will cause the adherant to detonate in a signal burst that will harm everyone
+
+powers:
+
+shared:
+- reassert form
+	- heal self to full
+	- restore any organs that somehow aren't flock to flock
+- acquire object
+	- have any loose item nearby fly and automatically catch in hand
+
+proselytizer:
+- conversion surge
+	- have a 5x5 area centered on user become flocktile
+- todo
+	- todo
+- todo
+	- todo
+
+pretender:
+- todo
+	- todo
+- todo
+	- todo
+- todo
+	- todo
+
+observer:
+- todo
+	- todo
+- todo
+	- todo
+- todo
+	- todo
+
+iconoclast:
+- hateful surge
+	- arc some electricity at a thing. force lightning is go
+- sunder walls
+	- touch a wall to have it and all connected walls in a 5x5 radius melt into floor tiles 
+- provoke fear
+	- confuse the movement of a target and mildly stun them as unnatural fear grips them
+
+
+
+
+
+
+assets for adventure zone:
+- penrose walls
+- Penrose tile floors (9x9)
+
+
+
+
+
+
+
+
+
+AI Color
+AI PDA
+AI Station Announcement
+AI status
+Access Area APC
+Access Internal Radios
+Call Emergency Shuttle
+Cancel Camera View
+Deploy to Shell
+Create Viewpoint
+Open Nearest Door to...
+Remove All Electrification
+Return to Mainframe
+Show Camera List
+Show Laws
+State All Laws
+State Laws (Advanced)
+State Standard Laws
+Toggle Alerts
+Track With Camera
+Unbolt All Airlocks
+View Crew Manifest
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+some simpleish things in increasing order of complexity
+
+- construction/deconstruction hints
+- multiple hat wearing for bees
+- emote datum rework
+
+
+
+
+
+
+
+astar fixes:
+	- does not care about doors or other blocking objs on tiles
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+artifact fixes:
+
+- force wall artifacts appear to be broken
+- refactor instruments in general to use datums instead of inheritance
+- find and purge high pitched squealy artifact noise (https://freesound.org/people/mikobuntu/sounds/155099/ in precursor)
+- artifact instrument pitch shifting should be per instrument, not per play
+
+bee artifact appearance ideas:
+
+bee larva
+comb
+stinger for handheld
+pollen basket??
+
+negative bee artifact: bee fault - grumpy sting on use
+
+
+
+
+void artifact appearance ideas:
+
+weird holes
+disturbance in the force
+purple cloud formations
+
+
+
+====
+
+
+- artifacts
+	- https://forum.ss13.co/showthread.php?tid=9458
+	- https://forum.ss13.co/showthread.php?tid=7067
+	- https://forum.ss13.co/showthread.php?tid=1908
+	- https://forum.ss13.co/showthread.php?tid=5963
+	- https://forum.ss13.co/showthread.php?tid=1965&pid=23351#pid23351
+
+
+sound sources:
+
+bee activate: 
+	- that one "crystal scream" effect i have from that other byond game thing i did earlier in the year
+	- https://freesound.org/people/benjaminharveydesign/sounds/315918/
+	- https://freesound.org/people/Robinhood76/sounds/273977/
+
+feather activate:
+	- https://freesound.org/people/unfa/sounds/186024/
+	- https://freesound.org/people/rawhiteman7/sounds/389976/
+	- https://freesound.org/people/NoiseCollector/sounds/57973/
+
+lattice activate:
+	- https://freesound.org/people/juskiddink/sounds/68262/
+	- https://freesound.org/people/arseniiv/sounds/188774/
+	- https://freesound.org/people/Stickinthemud/sounds/44164/
+
+void activate:
+	- https://freesound.org/people/Corsica_S/sounds/135554/
+	- https://freesound.org/people/V4cuum/sounds/348640/
+
+
+instrument ditties:
+	- ancient
+		- https://freesound.org/people/Setuniman/sounds/124578/
+		- https://freesound.org/people/multitonbits/sounds/383942/
+		- https://freesound.org/people/adrilahan/sounds/249738/
+		- https://freesound.org/people/fl1ppy/sounds/149921/
+	- martian
+		- https://freesound.org/people/toiletrolltube/sounds/243580/
+		- https://freesound.org/people/JustinBW/sounds/78570/
+		- https://freesound.org/people/zagi2/sounds/276971/
+		- https://freesound.org/people/sonidor/sounds/174006/
+	- eldritch
+		- https://freesound.org/people/qubodup/sounds/211648/
+		- https://freesound.org/people/RichardCulver/sounds/198914/
+		- https://freesound.org/people/mmleys/sounds/186014/
+		- https://freesound.org/people/mmleys/sounds/186015/
+	- wizard
+		- https://freesound.org/people/deleted_user_6515881/sounds/352764/
+		- https://freesound.org/people/Tristan_Lohengrin/sounds/319781/
+		- https://freesound.org/people/arseniiv/sounds/195946/
+		- https://freesound.org/people/Slaking_97/sounds/332024/
+	- precursor
+		- https://freesound.org/people/AniCator/sounds/20282/
+		- https://freesound.org/people/mikobuntu/sounds/155099/
+		- https://freesound.org/people/CreepypastaGuy/sounds/178863/
+		- https://freesound.org/people/lockingdread/sounds/68348/
+		- https://freesound.org/people/snikpohneb/sounds/173462/
+		- https://freesound.org/people/Corsica_S/sounds/44754/
+	- bee
+		- https://freesound.org/people/Puniho/sounds/184197/
+		- https://freesound.org/people/Faceonmars/sounds/94891/
+		- https://freesound.org/people/HerbertBoland/sounds/75189/
+		- https://freesound.org/people/eksaa/sounds/243011/
+	- void
+		- https://freesound.org/people/tec%20studios/sounds/99626/
+		- https://freesound.org/people/chipfork/sounds/50087/
+		- https://freesound.org/people/ERH/sounds/33838/
+		- https://freesound.org/people/JOHNWALLY/sounds/32805/
+	- feather
+		- https://freesound.org/people/sonidor/sounds/175058/
+		- https://freesound.org/people/Zetauri/sounds/275556/
+		- https://freesound.org/people/arseniiv/sounds/330931/
+	- lattice
+		- https://freesound.org/people/InspectorJ/sounds/353194/
+		- https://freesound.org/people/CGEffex/sounds/96643/
+		- https://freesound.org/people/milo/sounds/1734/
+
+
+
+TODO:
+
+- space missing in action description for augmentor
+- different description if it's adding a new part
+
+- instruments!!
+	- rework it as seen in file
+
+- someone changed artitypes to point to artifact origin datums, not strings.
+	- while this is not necessarily _bad_ it's broken a ton of things quietly that many people may never have known were broken
+
+- go through existing artifacts and address some of the critique, fiddle some numbers to make artifacts more worthwhile
+	- if they're suddenly too OP, tweak values
+
+
+
+existing artifacts:
+(mostly here just to add extra origins to)
+(will come back to critique later after adding new stuff)
+
+Watering Can - not bad, especially if it contains rare chemicals; but otherwise not particularly artifact-y.
+	- bee, lattice, feather
+Ranged Weapon - variable. Some are great, but just as many are worthless.
+	- lattice, feather, void
+Teleporter - very good, though many seem to do terrible things to the caster like lethal radiation poisoning.
+	- void, lattice
+Power Cell - ridiculously common compared to the others. Only good thing about them is they don't need to be researched so they don't waste your time.
+	- lattice, feather
+Activator - vanishingly rare.
+	- bee, lattice, feather, void
+Melee Weapon - like ranged weapons, very variable. A lot of them are worse than a toolbox.
+	- lattice, feather, void
+Container - I like these, although they can only give owl bombs, bee larvae, light grenades or *groan* power cells. Of these only owl bombs and maybe light grenades are of particular interest.
+	- ADD MORE OUTCOMES
+	- bee, lattice, void, feather
+Injector - one of the better large artifacts. Can occasionally inject hilarious things like vampire serum.
+	- lattice, feather
+Turret - interesting but largely useless. Targets everything, takes forever to aim and ones I've found all have pathetic shot damage. If it were a lot stronger and doesn't target the activator then it would be useful.
+	- lattice, void, feather
+Plant Grower - never really tried it since I'm not that into Botany, but seems uninteresting.
+	- bee, feather
+Music Maker - distressingly common. I rather like most of their music though.
+	- bee (buzzy noises), lattice (chimy noises), feather (random)
+Air Conditioner - aside from heaters searing everyone's lungs after a few minutes, largely pointless. Give it an on-off and make its effects a lot, and I mean a lot, faster, then it would be fun.
+	- feather
+Mutator - the other interesting large artifact alongside the injector. Mutation's temporary but can be regained on touch.
+	- bee, feather
+Lamp - like the music maker, distressingly common and doesn't even give off that much light. At least make them give enough light for you to turn the lights down in ArtLab!
+	- bee, lattice, void
+Healer - common but at least it's quite useful.
+	- bee, void
+Healing Field Generator - rare. Pretty nice but as long as you're conscious the healer is adequate.
+	- bee, void
+Harmer - never seems to do that much damage to matter. Minor annoyance. Give it a switch and make the effect a lot stronger, or give it secondary effects like intermittent paralysis or something.
+	- feather, void
+Bomb - more straight-forward version of black hole bombs. Again maybe for traitoring? But if you're a scientist bombs are already easily within reach.
+	- lattice, feather, void
+Force Wall Projector - rather niche. Not that great for defence as it covers a reasonable area and has a cooldown after it dissipates. Perhaps better for trapping people with you, or if you also have a teleporter handy.
+	- feather, lattice
+Recaller - impractical due to the uncertain timeframe. Trying to use it as a lifeline either sends you back prematurely or repositions your corpse, which I guess could be useful to ensure your body gets found? If it can be programmed or triggered in some way...
+	- void
+Imprisoner - would be nice if it protected you from environmental effects. Sadly it doesn't. It totally should.
+	- lattice, feather, void
+
+
+origin ideas:
+
+bee (hexagonal wax combs)
+	- only beneficial but not always useful
+	- plant uses, things that help heal, generally botanical
+	- bee wants only to do good
+	- generally weaker effects than other artifacts
+
+lattice (everything made of very fragile looking nets of shiny fibers)
+	- much like precursor, but more fragile artifacts that tend to shatter when exposed to too high a force
+	- generally inscrutable but not as much as precursor? less ridiculous possibilities
+	- not malevolent to humanity but mostly just incompatible inorganic compounds (weird crystalline entities?)
+
+feather (everything made of feathers and winglike structures)
+	- birdifacts
+	- actual creators similarly mysterious (space bird things? flocks of creatures that have long since left whatever space, maybe some of the artifacts ARE these creatures)
+	- again, not actively hostile or helpful for humanity, more weird
+
+void (more cloudlike) weird undulating solid clouds
+	- these things are unnatural cosmic phenomena, not manufactured, so all bets are off
+	- more like stable anomalies tbh
+	- possible unique: backpack that can hold bulky items inside itself
+		- maybe every time you put something in or take something out there's like a 2% chance something gets permanently lost
+		- "you smell ozone, and your load is lighter"
+
+
+
+
+Bulky
+Augment: Installs a random limb based on the tech type. Also deals some brute damage.
+	- ancient (borg), precursor (borg or synth), bee (synth), feather (synth)
+Synth: Converts borgs or humans into synths. [green human with synth-everything for organs]
+	- bee, precursor, feather
+Fabricator: Creates small artifacts/rare items/critters when fed raw materials
+	- ancient, precursor, lattice, feather, void, wizard, martian
+Cocoon: Prison artifact. Changes the user to a random mutant race when it spits them out (monkeys, lizards, martian etc). Can be used as a reverse-borger.
+	- martian, precursor, feather
+Teleporter: Activates and teleports the user to other existing teleporter artifacts. Fails if none exist.
+	- void, precursor, lattice, feather, wizard
+Generator: Powers the local area
+	- ancient, precursor, lattice, martian, bee, void
+Reverse Borger: Turns borgs into humans
+	- precursor, bee, feather
+Chameleon: Pretends to be a more beneficial artifact, down to mimicking the readings (except one randomly chosen one to give the hint something is off), then drops the illusion and is a harmful artifact
+	- ancient, eldritch, wizard, feather
+Bodyswapper: On first touch, sets a target. On second touch by someone else, swaps bodies. Does not allow swapbacks of the same pairs (cf. that one futurama episode)
+	- precursor, feather, void, eldritch
+Weather Machine: Conjures a round event on activation, then 
+	- precursor, wizard, ancient, eldritch, feather, void
+Fluid Barrier: Creates a forcefield of max depth fluid around itself which stays close to itself (moves if artifact is moved), MUST USE CHILD FLUID OBJECT (i will need to make it) WHICH DOES NOT UPDATE SURROUNDING FLUID CELLS
+	- precursor, ancient, martian, lattice, feather
+
+Borg Upgrader: Inserts random tools into a borg's module. Gives humans random item limbs
+	- ancient only
+	- borg augmentations (split off into a different artifact)
+		- targets: arm, arm, leg, leg, chest, head, cell
+		- replace a random part that's missing
+		- upgrade a random part
+			- arm: light -> standard -> sturdy -> heavy
+			- leg: light -> standard -> tread
+			- head: light -> standard -> sturdy -> heavy
+			- chest: light -> standard
+
+Handheld
+--- todo after mordent's tool modification ---
+Tool: Advanced tools that increase construction/deconstruction speed
+	- precursor, ancient, lattice, bee, feather, eldritch, wizard
+Surgical tool: Advanced surgical tools with a lower failure rate.
+	- precursor, martian, bee
+-----------------------------------------------
+Instrument: Plays weird music depending on origin
+	- martian
+	- eldritch
+	- precursor
+	- ancient
+	- wizard
+	- bee
+	- lattice
+	- feather
+	- void
+Holding: Acts as a container that can be worn on the back or the belt, and can hold up to bulky items, but has a 2% chance whenever an item is added or removed to lose an item permanently
+	- void only
+Infinite Sponge: Destroys all fluid it comes into contact with
+	- precursor, martian, eldritch, void, feather
+
+Tiny
+Grenade: Grenade with random effects based on the tech type.
+	- martian (chem/poison gas)
+	- eldritch (stamina drain/life drain)
+	- precursor (random chem gas, random chem fluid, flashbang)
+	- ancient (electrical zap, natch)
+	- wizard (fire blast/electrical zap/ice blast)
+	- bee (honey/healing fluid) turf.fluid_react_single("water", 100)
+	- lattice (flash/soundbang)
+	- feather (needle burst)
+	- void (implosion/CRUNCH like defective RCD)
+
+
+
+
+
+
+
+maybe another time:
+
+
+RCD for each origin
+
+Critter
+Robuddy: An inactive robot. Can be plugged into a robuddy port and have scripts uploaded to it. Module depends on tech type. For example the cyborg tech version could be one of those floating robots that shock you.
+	- ancient (repairbot)
+	- eldritch (unbidden servant)
+	- precursor (floating orb)
+	- wizard ()
+	- martian ()
+	- bee ()
+	- lattice ()
+	- feather ()
+	- void (void cloud)
+
+
+===
+
+
+ss13 ideas
+
+https://github.com/tgstation/tgstation/commit/e70dd7590bd492075f0b9516b9e09882b73540cc
+http://www.byond.com/forum/?post=724528
+
+
+MACHINES REFERENCES
+https://www.google.co.uk/search?q=ibm+system+360&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwj_sM2Sk__RAhUGB8AKHT2uAc8QsAQIVQ&biw=946&bih=946
+https://www.google.co.uk/search?q=data+general+nova&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwiE_tybk__RAhXlJsAKHRVsDYYQsAQIIg&biw=946&bih=946
+https://www.google.co.uk/search?q=60%27s+minicomputer&biw=946&bih=946&tbm=isch&tbo=u&source=univ&sa=X&ved=0ahUKEwjIoYCmk__RAhXqLsAKHR26CkYQsAQIGQ
+
+
+TODO:
+
+- merge stackables in inventory
+
+
+
+
+
+
+
+
+- box fulla keys
+	- "the last salvation and ultimate demise of a scientist who came so close, and yet not close enough"
+
+-
+
+
+
+
+
+
+- team gimmick antag panel
+	- set up number of teams and individuals per team
+		- randomly select players (checkboxes for traitor/not traitor, alive/dead)
+		- player row should have key, mob name, job, link to options, link to pm, current antagonist status
+		- also should be able to "lock" so you can "spin" random selection again but keep who you have selected
+	- set up teams of traitors
+		- mass assign them objectives
+		- mark objectives as complete or not
+		- overlay icons based on teams
+
+
+- carpenter bee critter/mobcritter - greater domestic carpenter bee
+	- abilities: when metabolising honey it instead turns it into beeswax, will patch up things and the first thing it patches up will be its home as critter
+	- mob can do this, basically has to ingest nectar or sugar, can place beeswax walls (destructible)
+
+
+
+
+
+
+
+
+
+
+
+
+- add cancel for assigning varedit stuff in all cases
+
+http://pastebin.com/qj3SgPHa - wire's stuck tooltip code
+
+use [his_or_her(user)] instead of /his
+
+- pocketbuddies
+
+- nanite cloud (gas) (fixes things that are broken based on concentration of exposure, but cause brute damage to anyone that breathes them in in concentrated quantities)
+
+- pathology incubator
+	- support one strain indefinitely
+	- (also, remove the 2.5% chance of a 100% successful splice destroying the pathogen)
+	- https://i.imgur.com/w4X2jsW.jpg
+	- https://i.imgur.com/aDbkh0i.jpg
+
+- ghost drone/borg lightbulb replacer
+	- load it up by clicking on tubes, bulbs, and boxes of tubes and bulbs
+	- click on it to set whatever colour you have selected
+	- click on light fixtures to swap the tube out
+		- with an intact tube/bulb, it's added to the replacer
+		- with a broken tube/bulb it gets dropped on the floor
+
+- airlock access-setting and painting
+	- must be airlock owner to remove access-requirements
+	- can set access-requirements above your own
+	- roundstart airlocks have their owners set to "station"
+	- set access via using screwdriver to open panel for wires, turn off power to airlock, use wrench to open access adjustment panel
+	- panel has ID card slot, required for setting accesses and removing them, with no owner you can set owner, with owner must be the same owner
+	- painting: spray paint can?
+
+- living objects should have gibs
+
+- pet crabs
+
+- export puzzles and import them more better (ask urs)
+
+- synth brain possessive by ghosts for borgs
+	- requires something from robotics
+	- robotics component requires soulsteel
+
+
+- improved mutant races
+	- custom scream sound for each race
+	- ilithids
+		- upside: breathe in water
+		-  downside: must constantly ingest water or start taking burn and oxy loss
+	- lizards
+		- upside: burn damage 0.9, reduced rads, 10% chance when screaming to pop off tail through autotomy
+		- downside: cold movement double effect, no shoes (claws), big dumb tail gets caught in doors sometimes (stuns, incredibly minor brute damage)
+	- skeletons
+		- upside: clack when they walk, spook people, remove ribs and play them as an instrument at the downside of being weaker to brute, can put their limbs back on without surgery
+		- downside: very low chance per tick to have their limbs fall off, lose all limbs if they run out of stamina, cannot fart as there is nowhere for the gas to be stored
+	- roaches
+		- upside: immune to radiation (get temporary superpowers when irradiated), immune to food poisoning
+		- downside: suck at everything, panic in lit areas, always stink, periodically leave slippery slime
+
+- new alien races (not genetic, ambassadors only)
+	- mantid (mutantrace datum)
+		- mantis people. good at fight, bad at everything else
+		- upside: high unarmed damage, a little bit faster, box comes with a mantid gas mask that only mantids can wear
+		- downside: can't wear clothes that are not hats or belts, absolutely suck at all construction
+
+- self-replicating drones
+	- controlled by AI
+	- initial capsule impacts the station somewhere
+	- they do not cause hull breaches, only consume inner walls that will not cause a breach
+	- self replicate
+	- only have stunning weapons
+	- fire anti-personnel metal fibre nets to disable
+
+- very very rare alien visitor event
+	- ghosts selected to respawn
+	- a diplomat and two bodyguards (mob critters)
+	- NOT ANTAGS
+	- gimmick objectives assigned to ambassador
+	- bodyguards get a "defend ambassador with minimum required force while co-operating with station authorities, and ensure they survive" objective
+
+- very very rare cryopod retrieval
+	- a cryopod spawns and floats towards the station
+	- a ghost can click the cryopod to enter it as the individual
+
+
+
+- "click n drag flour into sink, also click n drag shit into ovens"
+
+
+- wizard transposing grasp spell (AHMZ KRAE)
+	- includes some gewgaw to mark the location
+	- must be on solid ground
+	- requires windup time on use
+	- minor damage to wizard if area of teleport is harmful based on properties of area
+	- percentage chance to lose limb if used on self
+	- if no staff:
+		- 50% of going as intended
+		- 25% of a target's random limb or non-vital organ going to location
+		- 15% chance of victim going whole but you lose a random limb
+		- 10% of target's random limb or non-vital going, and one of your limbs and something you own goes to the location
+
+- wizard excruciating mend (AYOH DYNE)
+	- targetable on self or others
+	- stabilise crit OR heal 10-20 damage
+	- regenerate a random limb
+	- pain stun and weaken knockout for a time
+	- scream emote of course
+
+
+
+
+- https://forum.ss13.co/showthread.php?tid=5571 mutation superpalooza
+
+- https://forum.ss13.co/showthread.php?tid=6909&highlight=research research system
+
+- spider vendor 
+	- Canny Araine
+		- SELLS:
+			- fabrics
+				- cotton
+				- rubber
+				- latex
+				- spider silk
+				- wendigo hide (ridiculous cost)
+			- also spider eggs but at a high price 
+			- also spider pills
+			- also counterfeit kocmoc pchela eggs
+			- gravy (eddie izzard)
+				- "Homemade to spider recipes. Seems a bit wrigglier than standard gravy."
+		- BUYS:
+			- monkeys (dead or alive)
+			- mops (to remove them from circulation)
+			- cockroaches (dead or alive)
+			- raw meat (human, monkey, synthetic)
+			- steak (not as highly priced)
+			- jumpsuits (for materials)
+
+- spider cave 
+    - spider trader
+    - broken down pocket buddy that acts as a translator for spiders 
+    - spider bartender
+    - other spiders
+    - lots of cobwebs
+    - spooky lighting
+    - spider cider (cider + spiders)
+    - queen bumblespider (regular size but with crown)
+
+
+
+
+
+
+
+
+- wizard familiar spell
+	- :f familiar frequency (see mob.dm)
+	- sympathetic link: inform each of significant harm to the other
+		- stun and slightly injure the wizard if the familiar is killed
+		- cause the familiar to explode in arcane (random) power when killed
+		- cause the familiar to lose health over time if the wizard is killed
+			- fully heal the familiar if the wizard comes back with soul guard
+	- familiar summon
+		- summons familiar to location if existing
+		- otherwise transforms an existing target into the wizard familiar, with special mindslavey rules
+	- familiar spell
+		- familiar gets some sort of arcane nature on creation allowing for one or two randomly selected weak special wizard spells
+			- also makes it hard for the familiar to blend in as an ordinary critter if they use a spell (some sort of after effect while the spell is on cool down?)
+	- familiar dismiss
+		- kills the familiar without the magical rending, to allow for creation of a new familiar
+
+
+
+
+
+- recognised artifact descriptions
+	- martians can recognise either a trigger or function of a martian artifact
+	- wizards can etc etc of a wizard artifact
+
+- martian backpack sprites
+	- also add oxygen loss slowed
+	- also add cold resist but not immune
+	- blur vision if wearing backpack (not satchel though)?
+
+
+
+
+- wizard spell scrolls
+	- pick more spells but they're disposable
+	- crew can potentially steal them
+
+
+
+- medibee/bee nurse
+	- give a health analyser to a bee, they act like a medibot and apply medicinal honey (honey + any medicinal stuff they've consumed) to injured/sick people
+	- append "M. D." to end of name
+	- don't let heisenbee be a doctor bee
+	- higher priority given to bee mom
+
+
+some of the available medical chemicals available from plants and their mutations:
+
+salicylic_acid
+anti_rad
+ephedrine
+silver_sulfadiazine
+charcoal
+omnizine
+synthflesh
+salbutamol
+oculine
+mannitol
+
+todo: how do you determine overdose threshold of a chemical? nurse bee should be considerate and not OD patients
+
+atropine is not on the med chem whitelist
+ephedrine is not on the med chem whitelist
+
+no, bad bee (if reagents are available from this plant, also consume them)
+
+THC
+LSD
+catonium
+methamphetamine (trace)
+
+- bee genetics: splice together custom bee genomes
+
+- space eel
+	- can use charged cells on to store charge
+	- and use depleted cells to remove charge
+	- is also charged by ambient electrical shocks (it gets to live in the engine)
+	- too high a charge will lead to a discharge
+- hint fairies
+	- dispense bleeding obvious tips about the game
+	- incredibly frail
+- alien organs
+	- space bear heart
+	- space bear dissection
+	- space bee butt
+	- space bee butt creation
+	- queen ice spider heart
+	- floating eye eye
+	- ?
+- un-wooden-ifier for admin secrets
+	- use initial?
+
+- cube crusher
+- other cubes
+	- ghost cube
+	- plasma cube
+	- blob cube (mini blob)
+		- can absorb reagents
+			- can launch reagent infused slime
+		- can absorb materials
+		- can absorb limbs/organs for upgrades
+	- ice cube
+	- fart cube
+	- reagent cube, the worst golem
+	- bee cube
+
+- pipe laying equipment
+	- probably just for disposal pipes
+	- https://forum.ss13.co/showthread.php?tid=5852
+
+- mafia gamemode
+	- https://forum.ss13.co/showthread.php?tid=2946&pid=67424#pid67424
+
+- plant ideas
+	- https://forum.ss13.co/showthread.php?tid=2084
+
+- Aranae Metabolism 
+    - spiders treat you as neutral
+    - convert toxins to spiders 
+    - bees will be grumpy at you and in rare cases might harass you
+    - bumblespiders and nice spiders will defend you if attacked
+    - you look freakish
+    - empowered: all spiders will help you in danger, bees will attack in sight
+    - synchronised: Bees won't grump, immune to spiders chemical and toxin
+
+
+
+- make creepy pocket dimension thingy
+	- creepy sounds
+	- triplemeth style overlay
+	- other things of terror
+	- maybe some sort of weird dimensional pocket humans can be thrown into as overminds cannot harm directly? a randomly shifting maze that has all kinds of slowly moving hazards, and if they don't survive then they come back enthralled
+	- yeah the mechanic for enslaving humans is a human must be mazed, with some penalties based on their state like low health or being incapacitated or whatever, and if they die in the maze realm they get punted back with an AI controlling their body, but still able to see and talk, and spam resist to reassert control, but if they get mazed while in this state their mind breaks and they become ghost and the human is NPC'd
+	- body is in stasis during maze
+		- actually no the maze should just function as an indirect way of temporary dealing with humans, no enthralling or NPCing humans at all ever ever, that's already done to death by so many other antags (traitor, vampire, changeling in a sense)
+		- temporary weirdness involving limbs having minds of their own / madness toxin effects if the maze is sufficiently fucked up should probably still happen
+		- 
+
+
+
+---
+
+xenobiology scribblings live here now
+
+
+queen ice spider heart
+- cold resistance
+- stamina regen buff
+
+space bear heart
+- constantly inject meth
+- massive stamina regen buff
+
+floating eye eye
+- see ghosts, sometimes teleport
+- teleport in void-like pocket dimension at random
+
+space bee butt
+- allows for a pretty toxic sting but at the expensive of ripping out your butt and dying
+- DON'T GET FROM SPACE BEES
+	- combine butt and bee wool inhand
+	- harvest butt from someone with apidae genetics active
+
+queen ice spider butt (butt)
+- make silk when fart
+
+martian head
+- use as butt???
+- fart for unintelligible gibberish
+
+martian heart
+- produces small amounts of healing chemicals and weird martian blood (drugs) over time
+
+martian artifact heart
+- makes martian psychic abilities work better?
+
+---
+
+REJECTED:
+
+space wasp venom sack
+- injects self with venom constantly
+
+plasma spore butt
+- fart to detonate as if plasma spore
+
+rockworm gut
+- eat rocks (if at all goddamn possible), poop out gems
+
+wendigo appendix
+- stomach makes wendigo noises randomly
+
+killer tomato larynx
+- screams are sinistar noises
+- everything tastes like ketchup?
+
+martian mutant brain
+- allows for psychic stuns at the expense of brain damage
+- also allows for telepathy
+
+martian arm tentacles
+- allows for better grabs???
+	- longer range?
+
+martian leg tentacles
+- allows for no slips
+
+martian eye
+- does nothing more than a regular eye? cosmetic??
+
+
+===
+
+
+Martian Mode
+
+
+INFILTRATORS
+or, a prototype game mode before the hell of complexity that is MARTIAN MODE proper
+
+a martian infiltration team consisting of one mancer infiltrator, one standard infiltrator and one leader infiltrator
+objective: build up a base to eventually being able to summon a teleporter, which will begin to spit out an unlimited number of martians (and also call the shuttle with a 5 minute timer when it happens)
+
+infiltrators do not get psyblast, that's far too cheap, they can still teleport though
+
+
+
+stages of development
+
+- next stage: game mode basics
+	X - antag martians
+	[needs sprite] X - biomass pool
+	BELAYED - portal generator
+	- seed grower
+	
+ 
+- next stage: basic base building
+	- orifice
+	- bulwark
+	- transclucent membrane
+	- light globule
+
+
+- next stage: biomatter flow system
+	- vascular node
+	- storage globule
+	- healing pod
+
+
+
+- stage: building upgrades
+	- birthing polyp
+
+SKIP THIS, GO STRAIGHT TO THE FINAL CONCEPTS LISTED BELOW
+- stage: antag martians
+	- base infiltrator
+		- different UI
+		- different equip slots
+	- mancer
+		- cool toys to start with
+	- leader
+		- better armor, also has summon and different talky color
+	- militant
+		- end game ghost role, sucky gear, maybe a gun, no abilities
+
+- stage: game mode
+	- game mode datum
+
+structures:
+all structures slowly heal by themselves
+- biomass pool - any biomass placed into it (grabs or otherwise) puts it into the pool, where it is slowly digested and turned into biomatter, visible by examining it, very low storage of biomass though
+	- seed cost - free starting seed, one can always be got for free from seed grower
+	- health - 200
+	- growth time - 100s
+	- for every missing limb and organ, reduce the overall total by x% based on the following:
+		- limb: 5% (20% reduction possible)
+		- eye: 5% (10% reduction possible)
+		- heart: 5%
+		- brain: 5%
+		- skull: 5% 
+		- butt: 5%
+		- head: brain + skull (10%)
+		- so, potential for a 50% discount on someone who's been stripped for parts
+		- as a fail safe always provide 10% of value
+	- human, dead or alive, fresh - 100
+	- human, decomp stage 1 - 80
+	- human, decomp stage 2 - 60
+	- human, decomp stage 3 - 40
+	- human, decomp stage 4 - 20
+	- braindead martians can be put into the pool for 100
+	- monkey, fresh - 50
+	- monkey, decomp stage 1 - 40
+	- monkey, decomp stage 2 - 30
+	- monkey, decomp stage 3 - 20
+	- monkey, decomp stage 4 - 10
+	- critter, dead or alive - max(10, max health / 10)
+		- both objcritters and mobcritters
+	- viscerite - 3 per lump
+	- mystery meat - 3 per chunk
+	- meat - 5 per chunk
+	- individual limb or organ - 5
+		- potential from stripping body:  50
+		- remnant body thrown in (if fresh): 50
+		- this value will need to be adjusted if more organs become available (probably by making the discounts more severe)
+	- synthflesh - 1 per 20 units
+	- blood - 1 per 50 units
+	- martian flesh - 1 per 20 units
+- cloner - does not require biomatter to restore a dead martian, it digests the existing body
+	- seed cost - 150
+	- health - 150
+	- growth time - 100s
+	- time to clone - dependent on healing rate of martian
+- seed grower - produces biotech seeds (use a temporary awful topic thing for now), costing biomatter, large reservoir but only takes biomatter in when working
+	- seed cost - free starting seed, then 250, spits out a seed for a seed grower when it dies if it's the last one, if that gets stolen and destroyed then the martians aren't doing very well anyway, maybe an emergency device that drains all available biomatter to get a new seed
+	- health - 300
+	- growth time - 100s
+- portal generator - takes five minutes to come online when it has enough stored biomatter, at which point it must be guarded as every member of the crew gets made aware of where it is
+	- seed cost - 500
+	- health - 500
+	- growth time - 100s
+	- requires an additional 1000 biomatter to fully charge up
+
+- orifice - a door that only martians can open and close
+	- seed cost - 50
+	- health - 200
+	- growth time - 10s
+- bulwark - a big ol' fleshy bulk that works as a self-repairing wall
+	- seed cost - 20
+	- health - 300
+	- growth time - 5s
+- transclucent membrane - a weaker blob that works as a window
+	- seed cost - 10
+	- health - 150
+	- growth time - 5s
+
+- storage globule - stores unused biomatter for redistribution, also doubles as a recharger
+	- seed cost - 60
+	- health - 200
+	- growth time - 20s
+- vascular node - distributes biomatter from the biomass pool to any structures it can see, low storage of biomass
+	- seed cost - 60
+	- health - 50
+	- growth time - 20s
+
+- birthing polyp - uses biomatter to create tools and structural upgrades
+	- seed cost - 350
+	- health - 250
+	- growth time - 50s
+	- main cost for gear should be in the fact it costs precious biomatter, not time
+- healing pod
+	- seed cost - 200
+	- health - 150
+	- growth time - 50s
+	- any occupant of the pod has martian flesh pumped into them until they're fully healed 
+- turret thing
+
+upgrades:
+- auxilary heart - speeds up a structure's function by 10%
+- fibrous gills - reduces cost of biomatter for structure functions by 10%
+- [health upgrade] - gives 20% more max health to structure
+- [faster regen] - doubles healing rate for structure
+- [reduces build time of structure type] - cuts building time for this structure type by 25%
+- [boosts biomatter short-term reservoir capacity] - doubles reservoir for biomatter
+- [alerts when heavily damaged] - sends psychic alert to hivemind when structure falls below half health, has a 120s cooldown
+
+gear:
+- velvet worm egg
+	- harvesting servitor, goes out in the station in search of easy meat
+		- corpses
+		- dropped meat
+	- hates bees, will chase them
+	- defends itself with slime launcher but only attacks if attacked and will spray and call it quits
+- psychokinetic blaster
+	- the ol' classic
+- slime ball
+	- weird cuffs
+- flesh infusion
+	- basically just a rechargeable container that fills itself with martian flesh
+
+var/decomp_stage = 0 // 1 = bloat, 2 = decay, 3 = advanced decay, 4 = skeletonized
+
+
+
+
+
+
+
+- biotech upgrades
+
+!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!
+!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!
+MARTIAN GAME MODE
+
+WHERE TO START:	
+	- the core martian soldier mob breed
+	- other breeds
+	- martian starting gear
+		- soldier:
+			propulsion pack 
+			Psychokinetic Blaster
+			two slime balls (in pack)
+			random martian trinket? (martian small artifact with no real function) (in pack)
+		- warrior:
+			propulsion pack 
+			helmet
+			light armor
+			one slime ball (in pack)
+		- mutant:
+			propulsion pack
+			visor
+			martian brew
+		- leader:
+			propulsion pack
+			[some kind of fancier psygun]
+			visor
+			martian brew
+			crown
+			royal cape
+			imp
+		- mancer:
+			propulsion pack
+			mancer visor
+			martian stim
+			martian brew
+			martian flamethrower
+			insulative tubing
+			martian sonic grenade
+	- mothership interior and machines
+
+
+
+
+
+SYNOPSIS
+"Spawn inside The Mothership. The ship is a huge hulking cruiser, and has the ability to breach walls, and deploy smaller ships for defense. The aim is to capture humans, and bring them to the mothership, for processing. Humans dipped in the biomatter vat are processed for Psimatter and Biomatter. Psimatter is based on how much info is got from the Human (based on rank or if as objective), does not decrease, and is used for victory condition. Biomatter is used for making further equipment. "
+
+"cannot suffer organ failure" - yeah sure ok
+
+humans lose limbs if they try to use martian machinery
+martians can have limbs removed and grafted onto humans
+martians speak in telepathy
+martians cannot interact with human items or machines, but can carry them
+martians cannot use human medicine
+martians gib on death, non explosively, possibly dropping their limbs
+	- heart (grants space and cold immunity)
+	- skull (will require new predator stuff and new skullbot)
+	- brain (basically useless 
+martians when killed are caught in a psychic pattern buffer
+they can be respawned as an itty bitty baby martian for cheap
+or respawned as an appropriate class
+
+Martian machinery and devices and weapons are destructible with application of brute force (and fire but no so much), as well as some substances doing tox damage/being vulnerable to specific pathogens
+above half health, this damage regenerates 
+above a quarter health, there is no regen
+below a quarter health, the tech begins to bleed out and rupture
+
+need some sort of Martian repair gel for repairing devices and perhaps a gel pool to throw items into and/or the recharger repairs them
+
+ghosts can maybe get prompted to enter the psychic pattern buffer if martians accumulate enough psimatter, but they can only be stuffed into mute tiny aggressive minimartians with one hand slot restricted to weight class 2 and no lower, and no other slots
+
+martians all get a warp-to-shuttle skill, with the problem that it [to-do: downside]
+
+slots for martians: glove [tubing], head, back [jetpack container], exosuit [armor], eyes, left storage tentacle [pocket], right storage tentacle [pocket], left tentacles, right tentacles
+
+martians are more vulnerable to brute damage
+More resistant to burn damage and oxy damage
+
+martians either choose breeds or have them randomly assigned
+
+martians in this mode can absolutely know how any martian artifact functions, what it does and what triggers it
+	- maybe a possibility specifically for the mancer or mutant
+
+martian pet/guard"dog"
+"ol' shuggy"
+model after velvet worm
+sprays sticky slime at anything threatening
+absolutely hates bees and will hiss at them and chase them (but not actually injure them to avoid being stung)
+can wear hat??
+https://c1.staticflickr.com/6/5327/9378235564_5311ce4b8b_h.jpg
+http://1.bp.blogspot.com/-9IHOscVst8Q/UivuitzJY2I/AAAAAAAAZR4/chIyvpJQBfg/s1600/Velvet-Worm.jpg
+http://www.theskepticsguide.org/wp-content/uploads/2014/08/velvetWorm.jpg
+
+MARTIANS
+- mob critters have had "some changes", mention in integration notes
+	LEADER
+		- "Pink martian with crown and cape. Pink denotes royalty bloodline, clothing has perks. Spawns with medium amount of biopoints. Only one leader is chosen, is stronger than the other martians."
+		- assigned at random ala nuke shuttle leader
+	WARRIOR
+		- "Martian with pink insignia upon body. Uses hand to hand skills. Cannot use any weaponry. Spawns with small amount of biopoints. Beefy martians that can handle mobs."
+	SOLDIER
+		- ""Standard" martian. Has no skillset, but has a large amount of biopoints to spend. The most varied martian."
+	MUTANT
+		- "Martian with a large skull. Has telepathic skillset. Cannot use armor or "heavy" weaponry. Has medium amount of biopoints to spend. Essentially a "support" role."
+	MANCER
+		- "Martian scientists. Have no skillsets, but some unique tools, and spawn with the flamethower. Cannot use armor. "
+
+GEAR
+Psychokinetic Blaster: Produces burning psionic projections, standard starting weapon of the soldier. Can be pocketed.
+
+Soporific Blastula: A single grenade full of some kind of short-term knockout gas.
+Digestive Blastula: A single grenade that foams up into some powerful acid, for getting rid of the weapons the sleeping humans have dropped.
+
+
+[martian weeds]: A rapidly growing plant like kudzu, which, unlike kudzu, does not impede movement for humans but slows them down, where martians do not. [also tie this into the conversion goal]
+
+Martian Sidearm: Poison dart rifle, silently shoots at target, stunning target. Melee attack inflicts further stun, which also prevents suicide. Can be pocketed.
+Martian Pulserifle: Deals more damage to pods and silicons. EMP shots essentially. Burn damage upon humans.
+Martian SMG: Heavy rifle. Deals significant damage to humans, in short x3 bursts, dealing brute damage. 
+Martian Flamethrower. Heavy rifle. Shoots green flames and sorium, effectively lighting them on fire and launching them away, respectively. Has splash damage, naturally. 
+Slime ball: Cuffs a target player. 
+Martian egg: Will spawn minimartians, bred for war.
+Martian Sonic grenade: Upon activation, will cause the creature to scream, stunning opponents. Will not smash windows however.
+Light armor: Can prevent bleeding/brute and burn damage. Leader Cape acts as a light armor for all intents and purposes.
+Heavy armor: Same as above but with better effect. Slows down the martian however.
+Visor: Combines use of ProDoc and sunglasses, allowing to check health status and resist flashes.
+Mancer Visor: Like the visor but one eye and also has a reagent scan mode. Cannot be spawned and cannot be removed from the mancer (the mancer can detach it at will, though)
+Helmet/crown: Defends against crippling headblows. Crown gives the ability to use "mind warp" mutant ability.
+Insulative tubing: Used to cover tenticles. Can resist electrocution. 
+Barbed tubing: Used to cover tenticles. Melee attack can slice an opponent inflicting blood and brute damage.
+Sticky tubing: Used to cover tenticles. Melee attack attaches "slime" which can cuff a player.
+Propulsion pack: All martians spawn with this, allows for movement in space, but also doubles as storage.
+Imp: Small 1x1 ship which can be deployed. 
+Martian brew: Acts as a "stabliser" taking the martian out of crit and acts as a painkiller. Will convert into unstable mutagen if drank by a human mob.
+Martian stim: Only available to Mancers. Heal a medium amount of damage, requires to be charged after 3 uses.
+Mutative gene: See below. All is available bar "leader". 
+
+OBJECTIVES
+- a set of "do at least one of these" objectives so the humans don't know what exactly the martians are trying to do
+	NO - complete infestation of station ala the derelict in the debris zone (terraform)
+	- harvest of unique DNA signatures for further study (roll in some genetics stuff, maybe? anyone with complex DNA is a target, more motivation for people to roll by genetics and scream to have their complex DNA removed maybe)
+	- steal important human secrets
+		- this will be fun, gimmick things based on martian misunderstandings of humans
+		- possible options: bees, jumpsuits
+
+MOTHERSHIP
+	- look into cruiser code, it's unfinished so it might be better as inspiration instead of base
+https://forum.ss13.co/showthread.php?tid=5377
+	- contains the following delightful devices:
+		- terraform ray (large brain cannon, requires psimatter, used for endgame)
+		- biomass vat (acid pool to throw things in for biomatter and psimatter)
+		- biocharger (used to recharge martian weaponry)
+		- polyp (used to spawn martian doodads)
+		- stasis pod (used to heal martians of all damages)
+also needs an engine and a weapons system and a shielding system and a teleport system
+and also needs the ability to take damage, be repaired, have these reflect on the interior, etc
+
+
+https://forum.ss13.co/showthread.php?tid=237&page=4
+https://forum.ss13.co/showthread.php?tid=829&page=2&highlight=martian
+https://forum.ss13.co/showthread.php?tid=323
+
+!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!
+!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!!!!#####!!!!!!!
+
+
+
+
+
+
+Martian Stats:
+Cirrial, basically this works similar to how people build your DnD team, you will have your melee units, support, spellcasters and the like. Which for the most part distinguishes this mode from others in that each team could be made up of a variety of different martians.
+
+Martian Trooper: Hardened Foot-soldiers.
+[Image: nSrLso5.png]
+HP: 90 (Weaker than a human)
+BP: High (relative)
+Skillsets/Attributes:
+None. Spawns with light armor, some martian brew and its own IMP (1x1 pod).
+Armor class: Heavy. (can use all armor)
+Weapon class: Heavy (can use all weapons)
+
+Martian Mutant: Psychics with a turgid cranium.
+[Image: E0UfDT7.png]
+HP: 65 (quite feeble)
+BP: Medium
+Skillsets/Attributes:
+-Warp: Can warp away instantly, but has a longer cooldown than the wizard equivilant.
+-Clairevoyance: Same as above, longer cooldown.
+-Intense Stare: Targets an individual, if target stays in area, will knock the target unconcious.
+-Profound Stare: Same as above, but will freeze the target in the area, causing him to scream and writhe. Will detonate the targets head, at the cost of your own life. Use as last ditch measure/revenge.
+-Telepathy: Can communicate with Humans
+-Cerebral Combusiton: AoE spell, will slow and cause minor brain damage to all those in target area.
+-Psychotic Break: Melee range. Inflicts 15 units of Rajajajah in system.
+-Mental Distortion: Targets an individual, causing them to hallucinate and see humans as martians (and their speech too), and visa versa. Lasts for 5 minutes.
+-Subconcious shield: AoE spell. Will buff targets by providing them +30% damage reduction from all sources for (x) period (err i forget)
+-Mind Arc: Shoots a beam of purple lightning, if hits target and if there are others nearby, it will arc like lightning to another target, up to 3 times. Mild burn damage, does not stun.
+Armor class: None (cannot wear armor)
+Weapon class: Light
+
+Martian Beserker: Pale warriors with gold warpaint. (varied facepaint, aesthetic)
+[Image: hzgKnXx.png][Image: nWpzap2.png][Image: YTZYEOK.png]
+HP: 130 (Buff as fuck)
+BP: Low
+Skillsets/Attributes:
+-Leap: Exactly the same as the mutation. Jump headfirst into combat.
+-Battle Stance: Beserkers punches deal x2 more damage. Is modal (lasts indefinetely, only stops when switched with a different stance).
+-Defense Stance: Has a 50% chance of deflecting melee attacks (including armed), but halves damage done by punching. Is modal.
+-Blind Rage: Can only be activated if in RED health. Fully regains stamina, and ignores slowdown from damage.
+-Body Slam: Exactly like the wrestling attack, can only be used if target is prone.
+-Throat Whip: Slaps the target across the throat, stunning them briefly and preventing speech.
+-Constrict: Binds the target, essentially cuffing them and causing the target to be pulled. However anyone can break this by pulling the target away.
+-Agonizing Bind: Target must not move, similar to shocking grasp. Painfully pulls off a random limb. Works well with constrict.
+-Pulverize: Strong brute attack, creates medium bleeding damage and stuns the target. Will also wreck borgs. Long cooldown.
+-Can brute open doors, including bolted ones (passive)
+Armor class: Light 
+Weapon class: None (cannot use weapons, but can use attire like barbed tubing)
+
+Martian Mancer: Militant biologists of malicious intent. (with/without eyepiece. Again, aesthetic)
+[Image: ZcoxgRB.png][Image: vJrRXyQ.png]
+HP: 80 (quite feeble)
+BP: Medium
+Skillsets/Attributes:
+Has no skillsets but has numerous tools and abilities, some unique only to Mancer's:
+-Mancer visor: Acts as a health scan, chemical scan and nightvision combined (heck)
+-Martian stim: Only available to Mancers. Heal a medium amount of damage, requires to be charged after 3 uses.
+-Flamethrower: Despite mancers not being able to handle "heavy" rifles, mancers can handle/come equipped with the flamethrower by default.
+-Chem resistance: Is completely resistant to poison damage (passive)
+-Biobomb: A single sac, available only to mancers. Releases a small cloud unstable mutagen smoke (note this has NO effect on martians, see: martian brew), but they are not grenades, rather proxy assemblies, so can only be used as traps. Can be recharged.
+-Fleshy Dynamo: Acts as a one use EMAG before being recharged. Available only to mancers.
+Armor Class: None
+Weapon Class: Light
+
+Martian Sire: Egotistical aliens of royal bloodline.
+[Image: ZzzDWXd.png]
+HP: 100 (= to human)
+BP: Medium
+Skillsets/Attributes:
+One martian is picked as the Sire, which are considerably stronger than its cohorts due to not being restricted. Spawns with cape (acts as light armor), tiara (acts as helmet), so is already pretty armored. Has some Mutant abilties, and some unique to its own:
+-Telepathy: Can communicate with Humans
+-Warp: Can warp away instantly, but has a longer cooldown than the wizard equivilant.
+-Clairevoyance: Same as above, longer cooldown.
+-Mind Arc: Shoots a beam of purple lightning, if hits target and if there are others nearby, it will arc like lightning to another target, up to 3 times. Mild burn damage, does not stun.
+-Royal Command: Can only be used if in orange health or under. Removes stuns, heals minor damage and will notify all other martians of your location.
+-Grevious Shriek: Will activate passively if any martians break from the hivemind (i.e: Die), screeching; causing dazing and stamina damage, AoE
+-Zealous Rage: AoE, will cause all martians in area of effect to move quicker.
+Armor class: Heavy
+Weapon class: Heavy
+Double-post, in response:
+I like the idea of mini-martians and using bio-matter to respawn martians as weaker forms, it fits nicely and is probably better as mini-martians being mindless mobs like mini matcho menn.
+There'd be very little room to abuse that RP wise, if you remove speech from them, and they have to adhere to the hivemind anyway.
+
+I like the idea of a side quest to collect random unimportant junk. Remember that martians cannot use human stuff and can only "grip" it (i.e: Can pick up a gun, cannot fire it, can pick up a medical patch, cannot use it on themselves)
+
+I'm not a fan of the idea of the vines, as it steps on the toes of blob a little too much, and with a full effective martian force attacking the crew, kudzu like creeping object will become just really annoying for the crew and martians alike.
+
+I like the idea of the Mothership having a power source. Can just be modelled after an artifact, imo. The worm i'm not too sure of, while it seems like a good idea on paper, I feel like if a human manages to board the mothership, or manages to escape being dissolved (both of these situations would be extremely difficult without a proper force) that the only force that should stop him/her fucking up the ship is the martians. Otherwise they've got it too easy.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+C&P from a .txt file. Note that a bunch of this stuff is either sprited, or in WIP. Also subject to massive change:
+
+Martian pros:
+Not effected by cold, can breathe in space. 
+Access to martian weaponry and machinary.
+Humans cannot use martian machinary (ripping off an arm if they do) unless a martian arm is grafted onto them.
+Hivemind speak, all speak is heard by martians everywhere. Comes out in "ACK ACK ACK" to humans. Can communicate to humans through telapathy, however.
+Has several "breeds" which has own perks, chosen at round start, or can be changed in exchange for biopoints.
+Cannot suffer from any organ failure.
+Do not require clothing/ids/shoes or headsets. Martian apparel is only dependant on glove, head, back, exosuit and eye slots.
+
+Martian cons:
+Can pick up "human" items, but cannot use them. I.e: Cannot fire a gun, cannot interact with items.
+Cannot use "human" healing items or medicine. Only martian medicine, which is used in stationary statis pods, meaning that martians must escape to heal.
+Cannot wear human clothing, but can wear human hats (looking ridiculous in the process)
+Will gib when killed (non explosively), possibly leaving behind martian limbs to be grafted onto humans
+Clearly not human, will be targeted by silicons.
+Are particularly vulnerable to brute damage. 
+
+Side note: Martians are for all intents and purposes are critters.
+
+Round synopsis:
+Spawn inside The Mothership. The ship is a huge hulking cruiser, and has the ability to breach walls, and deploy smaller ships for defense. The aim is to capture humans, and bring them to the mothership, for processing. Humans dipped in the biomatter vat are processed for Psimatter and Biomatter. Psimatter is based on how much info is got from the Human (based on rank or if as objective), does not decrease, and is used for victory condition. Biomatter is used for making further equipment. 
+
+End game: 
+Station victory: All martians are killed/ mothership is destroyed/ humans escape without martians accumulating enough psimatter
+Neutral victory: Martians are alive, have accumilated psimatter but have not used "terriform" ray, humans have escaped. 
+Martian victory: Psimatter is accumumilated, martians use their "terriform" ray to change SS13 into more suitable martian conditions, whilst cronenberging (genetics mishap) inhabitants.
+
+
+MOTHERSHIP
+Terriform ray: Inactive cannon with a large miriclium crystal aimed at SS13. Resembles a large brain. Used to complete endgame conditions.
+Biomass vat: A large open vat of corrosive acid used to convert living or dead mobs into biomatter and psimatter
+Charger: Living organism resembling a beatle used to recharge martian weaponry.
+Polyp: Living organism resembling a fetus within a statis pod powered by biomatter to manufacture martian machinary.
+Statis pod: A clear statis pod used to heal all sorts of damage. 
+
+Weaponry/apparel:
+Martian Sidearm: Poison dart rifle, silently shoots at target, stunning target. Melee attack inflicts further stun, which also prevents suicide. Can be pocketed.
+Martian Pulserifle: Deals more damage to pods and silicons. EMP shots essentially. Burn damage upon humans.
+Martian SMG: Heavy rifle. Deals significant damage to humans, in short x3 bursts, dealing brute damage. 
+Martian Flamethrower. Heavy rifle. Shoots green flames and sorium, effectively lighting them on fire and launching them away, respectively. Has splash damage, naturally. 
+Slime ball: Cuffs a target player. 
+Martian egg: Will spawn minimartians, bred for war.
+Martian Sonic grenade: Upon activation, will cause the creature to scream, stunning opponents. Will not smash windows however.
+Light armor: Can prevent bleeding/brute and burn damage. Leader Cape acts as a light armor for all intents and purposes.
+Heavy armor: Same as above but with better effect. Slows down the martian however.
+Visor: Combines use of ProDoc and sunglasses, allowing to check health status and resist flashes.
+Helmet/crown: Defends against crippling headblows. Crown gives the ability to use "mind warp" mutant ability.
+Insulative tubing: Used to cover tenticles. Can resist electrocution. 
+Barbed tubing: Used to cover tenticles. Melee attack can slice an opponent inflicting blood and brute damage.
+Sticky tubing: Used to cover tenticles. Melee attack attaches "slime" which can cuff a player.
+Propulsion pack: All martians spawn with this, allows for movement in space, but also doubles as storage.
+Imp: Small 1x1 ship which can be deployed. 
+Martian brew: Acts as a "stabliser" taking the martian out of crit and acts as a painkiller. Will convert into unstable mutagen if drank by a human mob.
+Martian stim: Only available to Mancers. Heal a medium amount of damage, requires to be charged after 3 uses.
+Mutative gene: See below. All is available bar "leader". 
+
+"Breeds" 
+Leader: Pink martian with crown and cape. Pink denotes royalty bloodline, clothing has perks. Spawns with medium amount of biopoints. Only one leader is chosen, is stronger than the other martians.
+Warrior: Martian with pink insignia upon body. Uses hand to hand skills. Cannot use any weaponry. Spawns with small amount of biopoints. Beefy martians that can handle mobs.
+Soldier: "Standard" martian. Has no skillset, but has a large amount of biopoints to spend. The most varied martian.
+Mutant: Martian with a large skull. Has telepathic skillset. Cannot use armor or "heavy" weaponry. Has medium amount of biopoints to spend. Essentially a "support" role.
+Mancer: Martian scientists. Have no skillsets, but some unique tools, and spawn with the flamethower. Cannot use armor. 
+
+Skillsets: TBA!!!
+
+
+
+=======
+
+marine area
+
+eventual hint: sstv signal depicting a view of a crashed alien spaceship as seen from the facility, heavily distorted, with the co-ordinates in view as a timestamp thing or whatever
+
+general idea is an underwater research base
+course it's all broke and leaking to shit and a martian ship crashed into it at some point, so it had to be evacuated
+the automatic drainage systems are starting to fail but have kept some of the areas relatively habitable
+
+martian ship has mostly degraded at this point, most of it is flooded and drowned/dead biotech
+
+
+ocean floor - taken care of thanks to mbc, thanks mbc!!
+
+airlocks required to cycle through filling or draining water
+
+base research area more or less safe, lots of aquatic beasties in tanks
+
+broken research area has the beasties free swimming, but they're defensive, not aggressive
+
+starting area is a completely functional intact communications room where the distress signal was sent and recorded, along with a skeleton in a labcoat on a makeshift bed in the corner (poor dude)
+everyone else has long since evacuated or been eaten or whatever
+
+
+
+
+
+LAB AREAS
+
+units connected by glass tunnels
+
+- access dome
+	- submarine docking area
+- xenobiology dome
+	- specimen containment
+	- chemical analysis suite
+- habitation dome
+	- quarters
+	- life support
+	- kitchen/canteen
+- administration dome
+	- machine room
+	- communications room
+
+
+
+
+tilesets/other assets required
+
+ocean
+	- seafloor sand (preferably white)
+	- gravel
+	- obstructive rocks (must be some reference material)
+	- seaweed variants
+	- clams
+	- starfish
+	- bubble effects
+
+lab
+	- more aquamarine tinted glass
+	- white walls and floors (use bee ship as inspiration)
+	- fancy touch screen terminals detailing information 
+
+source inspiration: http://imgur.com/gallery/Jb6jW
+
+martian
+	- new style walls for martian ship
+	- new style doors for new style walls
+	- some more floor tile variations would be nice
+	- more random biotech guffins (look at artifacts)
+	- bigger martian computer display
+	- some form of organic light source
+	- servitor critters and dead ones of course
+	- martian mancers working on research experiments until players get close enough, have them babbling to each other and pushing buttons
+
+some ideas for aquatic beasties
+- all of these creatures flop around outside of water (area check or object check, remember to count the fitness pool as water), trying to get back to water, and get some sort of oxy-damage equivalent outside of water which slowly regenerates when back in water
+- a smaller shark (zebra shark?)
+- nurse shark (docile unless provoked)
+- seahorse, of course
+- electric eel
+- some generic small fish, use overlays to randomly generate appearances
+
+- iunno, martian modified dolphin??
+	- kept in a pod
+	- upon being freed will lash out, attempt to flee, and if unsuccessful teleport away, never to be seen again
+
+
+===
+
+The False Good Ending
+
+
+misc telesci area puzzle ideas
+- things that activate based on whether you're facing them or not
+- things that activate based on whether you can see them or not
+
+
+four mini-dungeons
+
+- earth
+	- found in [s]biodome caves[/s] somewhere in the debris field jesus christ stop letting telescience have everything
+
+
+entrance condition/location:
+	- get an apprentice cap
+	- get a cutting tool
+	- get something made of gold
+	- pick up some new item from a random debris field asteroid (as in i pick one at random, not as in random per round)
+		-  maybe related to spider bar?
+			- no definitely related to spider bar
+		- a heavy balloon made of spider web
+	
+	- take the cap, tool, gold and web balloon to a specific tile in biodome
+		- pick an arbitrary dead end covered in spider webs
+	- put the gold thing down on the ground
+		- actually it should be anything made of precious materials, or coins, or money
+	- use the shard to cut open the balloon, which will release a special bumblespider (money spider)
+		- it will be tiny
+		- without something expensive to capture its interest it will run away and disappear when out of mob sight
+			- possible with co-ordinated effort to catch, but it will try to run away
+	- put the apprentice cap, or a wizard hat on the spider
+	- now it is a magic money spider
+	- it will open the portal and step through it as a means to escape and never be seen again 
+
+alternate solutions: bring any bumblespider, up to and including a player bumblespider
+
+the "foyer" is an enchanted, highly magical forest that fades away into the nothing if you venture out too far
+	- it has a very rapid day night circle but only while someone is within it
+		- lights turn on at night
+		- during day, chance for small birds to spawn
+		- during night, chance for chickcharney to spawn
+			- violent owl goblins
+
+the main objective in this area is to just survive the forest
+
+overgrown stony outpost with some puzzles  as an optional thing
+	- the Enoch Vault of Earth
+		- "within this place I have stored an item of power, etc."
+	- multiple floors of a keep
+	- not THE tower though
+	- probably some ridiculous logic puzzle type stuff
+	- ideas
+		- a lights out pressure pad thing except you need to turn the lights on, 5x5 grid, all pads start off (so it's guaranteed solvable), no reset switch provided as it is not actually possible to get into an unsolvable state from there
+		- a dumb little trivia thing with figurines of critters and tiles representing where they would be found
+			- owl - tree
+			- crab - fire
+			- bear - dirt
+			- cat - pavement
+			- eye - void
+			- seal - water
+		- now let's throw a curveball with a puzzle so convoluted as to make the rgb columns seem tame
+			- room filled with tiles that change colour, start neutral
+			- for each player in the room they have a shade acting as their exact doppleganger
+			- attacking the doppleganger harms the equivalent player
+			- the dopplegangers convert the floor tiles to a different colour
+			- there are four key tiles that must be the player colour
+				- the four key tiles are randomised but aligned with each other
+				- when they're activated they show glyphs after deactivation from an explosion effect
+				- if they all become the doppleganger colour the players are unceremoniously blown to the entrance of the room (with damage dealt from being thrown at a wall) and the puzzle resets
+				- upon all being player colour, the dopplegangers are destroyed and the door opens
+				- the key is that in the middle of the room there is a can of paint which puts down the opposite colour to what they want, but it causes the dopplegangers to put down the player colour
+		- the next floor has the loot!!
+			- nice big opulent shrine that contains the prize
+			- also healing salves
+			- also a portal to outside so they don't need to go through puzzle bullshit again
+	- grants a weapon that does increased damage to specifically critters, the Servant's Spear
+		- like a regular spear but slightly less damaging than a plasmaglass spear, however 1.5x the damage against organic critters, 3x the damage against the peluda
+		- mostly intended to trivialise the boss here
+
+boss: the peluda
+giant green porcupine creature 
+	- shoots poison spines from its body like arrows
+	- head, neck and tail of a snake
+	- tortoise feet
+	- only vulnerable point is the tail
+	- creates floods by stepping into rivers
+	- a single strike from the tail is lethal
+	- breathes out fire
+	- spits out streams of water or acid
+
+	- can only be harmed by attacking the tail
+	- spines deal brute damage and administer small amount of toxin (the base one, just tox damage, nothing fancy)
+	- attacks
+		- radial spine shoot
+			- shoot spines in four directions, cardinal then ordinal
+			- half health: shoot spines out in compass rose directions, then tilted 12.5 degrees, then compass rose directions again
+		- rapid spine shooting
+			- fires burst of spines but cannot change target
+			- half health: firing rate twice as fast
+		- fire breath
+			- like the dragon breath genetic power
+			- half health: twice as long range, hotter fire
+		- tail swipe
+			- only used at 1/3rd health onwards
+			- long wind up, long swinging arc, 200 brute damage attack + flings victim in a direction
+				- not insta death but it might as well be
+
+loot:
+	- if they completed the stone outpost, the Servant's Spear
+	- the Jade Piece (one of the four pieces of a symbol required to enter Enoch's sanctum)
+		- active in hand use creates a temporary portal back to this realm when outside it, and to the owlery when inside it
+			- if the current map has no owlery, it will instead just dump them into the space diner, i guess
+				- if there's also no space diner dump them into latejoin
+					- if this doesn't exist then fuck it, it dumps them at 1,1,1
+	- couple of gold bars, other precious gems (not much of a reward)
+	- a choice between the Spiny Bracer, which is basically just a poison spike gun with slowly regenerating ammo, and probably nigh useless to most people, and the Spiny Plating, which is armor that deals minor brute damage to anyone punching it unarmed and deals 1 hp of brute damage to critters that attack, mostly only good as armor (armor value should be not as good as the ancient armor)
+	- implicitly, a photo op of the peluda for a later puzzle
+
+- fire
+	- found in lava moon
+
+- water
+	- found in theta moon
+
+- air
+	- found in mars
+
+entrance condition/location:
+	- break the window to the VR tile in mars
+
+
+wizard sanctum
+- in the void
+- requires the four keys from the mini-dungeons
+- also requires a photo of each of the bosses (good fucking luck)
+- also requires the philosopher's stone
+- has the orb of annihilation (azoth, the universal solvent)
+	- touching it will cause the death of the toucher
+	- smacking it with a thing will cause that thing to be annhilated
+	- smacking it with the philosopher's stone will create the Alchochodon
+- using the Alchochodon will create a portal to a NEW REALM of pure white, the nothing
+
+the nothing
+- empty blank white void
+- some form of marble guardian holding a book (the Book of Silence/Mutus Liber)
+	- it is completely mute and makes no sound
+	- human sized, frail, zippy wizard glass cannon type, they'll have had to suffer through a ton of other things
+	- plus making it weak might provoke a "are we the baddies?" moment
+- defeating the guardian will produce a one-way portal to the solarium
+- give the book to the automaton (it can not have read the king in yellow) to head for the good ending
+
+
+solarium
+- instead of summoning the server, the automaton summons some golden ice cream rewards  and freezes up forever
+
+the actual "good end"
+
+- paradise game mode (like extended but with more party gear and cute things and party events)
+	- automaton is dead/marble statue
+	- the sun is missing
+	- eventually, unseen tiles start to fade into white nothing (like the nothing at geminorum)
+	- after about 10 minutes, the unseen restriction drops and the rate accelerates
+		- anyone caught on a tile that fades into nothing becomes a pale shade
+		- pale shades are critters that can move around and speak, and anything they walk on or touch becomes nothing
+	- shuttle can't be called because "it doesn't exist"
+	- lots of just plain messages 
+		- It's finally over.
+		- Aren't you glad?
+		- Isn't it wonderful?
+		- We're going home.
+		- Everything turned out for the best.
+		- It's all finally over.
+		- The gate has finally been opened.
+		- The end finally came.
+		- The struggle is over.
+		- The end is here.
+		- We are at peace.
+		- Now to sleep, perchance to dream.
+		- You can rest now.
+		- The pain is ending.
+
+
+
+dramatis personae
+
+Enoch the Knowing
+- some wizard scholar-chemist with a keen interest in alchemy and forbidden magic
+	- sought the philosopher's stone, failed, discovered aether though and how to somehow journey in and out of the void at will
+	- constructed a secret sanctum 
+
+Unnamed Researcher
+- someone (probably from Hemera) who stumbled across some of Enoch's artifacts
+
+David Weller, the guy wearing a Knock-off Crown
+- cameos i guess
+
+
+ENOCH'S SCATTERED JOURNAL NOTES
+
+I have bodily entered the ethereal realm, after much effort. While the Archmagi have spoken of this place, they see it as a means to an end, a glorified transit station, and care not for the beauty and wonders within. I have found a place less travelled, free of the debris of past hubris and wanton foolishness, and it is here I shall construct my sanctum.
+
+---
+
+The Great Work eludes me, though I hear rumour that it came close to completion in a space none of the others dare tread. Unholy energies emanate from this wicked place, and the vengeful dead skulk in the spaces between spaces, threatening to tear the minds of those who Know. Perhaps some simpleton can be convinced to collect whatever remains of their research, and bring it to me. I shall see if there are any acolytes with a more rebellious streak.
+
+---
+
+What a waste! Though the acolytes' ignorance proves a valuable shield, their pride lead to their destruction every time. They brashly go about their missions with impudence and bravado, easily distracted with wildfire destruction or exploration of the limits of transmutation. So often have I seen my carefully selected acolytes dragged into pointless rituals by certain Archmagi, who I will not name here so as not to trigger their scries. Though I know it borders on heresy, perhaps I should seek assistance outside the circles of the arcane. It is not as though I have not transgressed already.
+
+---
+
+Though days pass strangely here, I know time continues. I find myself aware of my growing weakness. While I have foreseen my death and known it to be far from now, my opportunity to complete the Great Work myself seems more out of reach than ever. I shall deign to find an apprentice before I grow too feeble in body and spirit. 
+I had found someone, a young man, who happened upon my sanctum. Though his eyes were filled with terror, he stared as if Knowing, and I reached out to him to offer him a place as my apprentice.
+He began to scream, and to babble about the voices of angels and demons inside him. As I regretfully began the incantations to bid him safe and swift passage from my sanctum, he suddenly vanished from the ethereal realm.
+I have seen no trace of him since. In hindsight, I wish I had thought to ask of him why he wore such a strange crystal on his head. It might have provided some valuable insights.
+
+---
+
+Days become weeks, weeks become months, months become years. Time is as breath, but I am running out of both. I struggle to walk between chair to chair of my sanctum. I have no apprentice, the Archmagi will not hear my requests, and my lifelong efforts to unlock the infinite seem futile. I have designed many constructs to guard the secrets of my work from the unworthy. Perhaps some successor in future can find my work and complete it. For now, I shall retire from this business for the rest of my days, with my familiar and beloved friend Luna. I have foreseen that we die together, and I would not wish it any other way.
+
+---
+
+At the advice of my dear cat, I have allowed this journal to be torn to pieces, to, in her words, "annoy the ever-loving crud out of the future grave robbers". Such a clever kitty.
+
+
+

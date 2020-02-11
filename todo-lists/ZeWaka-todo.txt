@@ -1,0 +1,52 @@
+/* ._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._. */
+/*-=-=-=-=--=-=-=KILL ALL LAG AND STUFF WHOOO=-=-=-=-=-=-=-=-=-*/
+/*-=-=-=-=-=-=-=-DON'T WORRY WHAT I PUT HERE-=-=-=-=-=-=-=-=-=-*/
+/*-=-=-=-=-=-=-=-=-=-=WITH LOVE BY ZEWAKA=-=-=-=-=-=-=-=-=-=-=-*/
+/* '~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~'-._.-'~' */
+
+
+* CONTROLS IN SKIN.DMF
+
+* add cancelling to genmining:316
+
+* why are buttbots and skullbots broken - speak,hear_talk are fine. wire commit?
+
+* ARMOR FROM NANOFABS
+
+* Add type rememberance to ReplaceWith & turfs in general
+
+* REVERT OR ADD TO SCORESTATS.DM
+
+* rework adventure loader to use the new dmm loader/saver
+
+* area cleanup stuff on explosions?
+
+* syndicate soldering iron/or just an upgrade to the syndicate device analyser: allows you to "solder" mechcomp components to the ground, making so that you cant unwrench them without a syndicate soldering iron/syndicate device analyser. maybe make so that you CAN take them off but it takes some time and makes the components blow up in your face?
+
+
+
+------------------
+RANDOM NOTES BELOW
+------------------
+
+HECK YES MY DUDES I LEARNED REGEX
+
+FIND
+\/turf\/(un)*simulated\/floor(?:\/plating)*(\/airless)*{(?:dir = (\d{1,10})+)*[^\n]*(?:icon_state = "yellow")+(?:; dir = (\d{1,10})+)*[\W\w]*?}
+
+IN
+maps/
+
+REPLACE
+/turf/$1simulated/floor$2/yellow/side{dir = $3$4}
+
+
+REMEMBER TO REPLACE {dir = } with ***NOTHING*** IN THE END!
+
+---------------------------------------------------------------
+
+FINDSTUFF
+
+code/,_std/,-icons/
+
+---------------------------------------------------------------

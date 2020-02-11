@@ -1,0 +1,431 @@
+/// JOHN AND BILL AI WISHLIST \\\
+Foreword: The following behaviors are already handled and should not be affected:
+	- speak() has its spaghetti framework and is somewhat baked in stone for the moment, if you touch it dont forget all the area-secific and grill specific junk
+	- Bill and John already have retorts coded into speak() but that could be moved to a generalist hearmob proc 
+	- Bill and John will fight if you fuck the other one up. Could be adjusted
+WANTS:
+	- If [bro] is within some arbitrary range (i.e. in the same general place) but more than 5-7 tiles away, meander toward your bro.
+	- If [I] am on the shuttle, but [bro] is not, don't let players move it. Call out to [bro]. [Bro] should pathfind to the shuttle as quickly as possible. 
+	- If shuttle leaves without [me] and [bro], and we are alive, aggro the person who called it.
+	- If shuttle moves to an adventure zone, follow the person who called it. That person becomes [party leader]- When we return to diner, stop following. 
+	- If [party leader] enters a new Area on Z2, wait a while, then follow them in. If [party leader] is attacked by [mob], aggro [mob]
+	- If [John] is in range of food, occasionally pick it up
+	- If [John] is holding food, if it is juiceable, look for juicer and put it in. If not juiceable, or no juicer in range, look for a Grill and cook it. (see next point)
+	- If [John] sees a grill, small chance to turn it on. If he's holding food, 100% chance to turn it on (use empty hand). If the grill has [grillitem], try to take it off between 30 and 60 cooktime. 
+	- If theres no brothers in range, just ignore most of the brotherly stuff, so you dont softlock for someone killing bill or spacing him or whatever. 
+Some notes: 
+The brothers look for each other and re-associate with an unlimited number of bros inside speak(), if by some chance you duplicate them. This might need to be changed to a global and a limit of one of each bro. 
+The brothers probably talk to each other while dead. Maybe. This hasnt been tested. 
+The brothers seem to aggro on help intent. Very awkward hugging fights ensue
+===============================================
+					chess
+===============================================
+
+var/list/chessboard = list()
+
+
+turf/simulated/floor/chess
+	New()
+		..()
+		chessboard += src
+	
+	disposing()
+		chessboard -= src
+		..()
+
+obj/item/chesspiece
+
+	name = "chess piece"
+	desc = "a generic chess piece parent that you really shouldnt be seeing"
+	icon = "icons/obj/misc/chess.dmi"
+	iconstate = 'default'
+	
+	var/color = 0
+	var/in_check = 0
+	var/battle = 0
+	var/isking = 0
+
+	New()
+		..()
+		name = "[color ? "black" : "white" ] [name]"
+
+	MouseDrop(obj/over_object as obj, src_location, over_location, mob/user as mob)
+		..()
+		var/turf/Tb = get_turf(over_location)
+		var/turf/Ta = get_turf(src_location)
+
+		if(!Tb | !Ta)
+			return
+		else
+			if(istype(Tb,turf/simulated/floor/chess) && validmove(Ta,Tb))
+				chessmove(Tb,user)
+			else
+				boutput(user, "<span style=\"color:red\">Invalid move dorkus.</span>")
+
+	proc/gib()
+		//do some gib stuff here
+		qdel(src)
+				
+		
+	proc/validmove(turf/start_pos, turf/end_pos)
+		return 1
+
+	proc/chessmove(turf/T, mob/user)
+		for(var/obj/item/chesspiece/C in T)
+			if(C.isking && (color != C.color))
+				src.visible_message("<span style=\"color:green\">The [src] has captured the enemy Captain. [user] has defeated the [C.color ? "black" : "white" ] crew.</span>")
+				C.gib()
+			else if(color == C.color)
+				boutput(user, "<span style=\"color:red\">You really ought to fight the enemy, not yourself.</span>")
+				return
+			else
+				src.visible_message("<span style=\"color:blue\">The [src] has captured the enemy [C].</span>")
+				C.gib
+		src.loc = T
+		
+
+/* specific pieces go here, the major differences are just their validmove() procs. Some might override chessmove() too
+
+_1____0_
+_B____W_
+
+TODO: mid-path blocking. Right now you can "jump" over blocking pieces, not ideal. 
+
+*/
+
+obj/item/chesspiece/pawn
+	name = "chess assistant"
+	desc = "a pawn- peon. pon? pone. A chess greyshirt."
+	var/movdir = 0
+	var/opened = 0
+	
+	black
+		color = 1
+	
+	New()
+		..()
+		iconstate = [color ? 'pawn_black' : 'pawn_white']
+		movdir = color ? 1 : -1 
+
+	validmove(turf/start_pos, turf/end_pos)
+		if(!opened && (start_pos.y==end_pos.y))
+			if((end_pos.x - start_pos.x) == 2*movdir)
+				return 1			
+		else if((end_pos.x - start_pos.x) != movdir)
+			return 0
+		else if(start_pos.y != end_pos.y)
+			if(abs(start_pos.y - end_pos.y) == 1)
+				for(var/obj/item/chesspiece/C in end_pos)
+					return 1
+				return 0
+			else return 0
+		else return 1
+	
+	chessmove()
+		opened = 1
+		// ADD LOGIC TO CHECK FOR PROMOTIONS! !! 
+		..()
+
+
+
+obj/item/chesspiece/king
+	name = "chess captain"
+	desc = "a vital target, fittingly useless in combat."
+	isking = 1
+	var/opened = 0
+
+	black
+		color = 1
+
+	new()
+		..()
+		iconstate = [color ? 'king_black' : 'king_white']
+
+	validmove(turf/start_pos, turf/end_pos)
+		if(getdist(start_pos,end_pos) == 1)
+			return 1
+		else if (!opened)
+			for(var/obj/item/chesspiece/C in end_pos)
+				if (istype(C, obj/item/chesspiece/rook) && (C.color == color))
+					src.visible_message("<span style=\"color:blue\">The [src] castles with [C].</span>")
+						C.loc = src.loc
+						return 1
+		return 0
+
+	chessmove()
+		opened = 1
+		..()
+
+
+
+obj/item/chesspiece/rook
+	name = "chief chessgineer"
+	desc = "somewhat rigid, linear, but totally ready to start fires"
+
+	black
+		color = 1
+
+	new()
+		..()
+		iconstate = [color ? 'rook_black' : 'rook_white']
+
+	validmove(turf/start_pos, turf/end_pos)
+		if((start_pos.x == end_pos.x) || (start_pos.y == end_pos.y))
+			return 1
+		else return 0
+
+
+
+
+	
+
+
+
+/////////////////////////
+OK REAL TODOS NOW
+/////////////////////////
+
+~ It's 2019 my guy, and it's time to constantly get stoned instead of working on the things you already know what you've gotta do. 
+
+- Dr.Segway, a being of pure momentum, knocks folks down and throws them across the room. Scans health and removes shrapnel on impact?
+
+- add recipe for Beans + Milk = English Breakfast
+
+- work macronutrients into food chemistry, starch and fat and proteins and sugars and fibre. 
+
+[DONE]? fix fluid spawners to work on unsim! remove R.reaction(T,TOUCH) - replace with T.fluid_react(R,amount)
+
+[DONE] John Bill (hey he exists now! cool!)
+	John Bill is Shitty Bill's brother. 
+	The name is adopted. Family name unknown. Think Mario brothers i guess. 
+
+- Adjust explosion brisance;
+	work out a scheme where brisance is at a *minimum* a function of the square of power, with some lower bound. Scale most explosives to 2-5 times their current brisance, then follow template 
+
+- SEE IF YOU CAN MAKE SHUTTLE CORNER TURFS CHANGE ICONSTATE WHEN THE SHUTTLE MOVES, FOR MAXIMUM IMMERSION AND NO JANK WITH OBJECTS 
+
+- Owlzone puzzle
+	COG: "Look at the secret passage in the owlzone.dmm command wing, directors bedroom and shower
+	There's a false wall there that responds to the owlish key
+	Leads into a secret lab
+	It'd be a good spot for a more puzzle oriented door toggle or something the scanners could locate" 
+	MORE DETAILS
+		*Replace obvious fake wall with something more subtle
+		*(SORTA, KEY STAYS THERE AND DOES ANOTHER THING) Replace Owlish key (bush in red room with barrels) with an environment puzzle, Cog suggests something with the taps on a faucet
+		*Include a consequence for puzzle failure
+		*Hide clues as to the correct solution with var/interesting
+		*Make a obj/spawner to assign those vars at runtime, to simplify mapping
+		*Make a higher-range modified t_scanner to help introduce players to the new hidden clues
+		Cog requests bullet impact & forensics spawner / spoofer, might get to that 
+
+- figure out why horizon's telepad ends up disconnected and why telescience folks cant seem to hook it up
+
+- Port over the non-euclidean bullshit you made in 16code 
+	Uhh start by finding where you hid it all? 
+	obj/landmark, turf/, explosion.dm ? where else you fuckwit, why didnt you just put this all in warcrimes.dm
+	you absolute shithead 
+	you fucking useless cunt
+
+- Make more varieties of cheesecake, just to spite birebarrage
+
+- Add more things to warcrimes-todo.txt
+	Add more things to warcrimes-todo.txt
+		Add more things to warcrimes-todo.txt
+			Complete some stuff! yay!
+				Add more things to warcrimes-todo.txt (but also complete some)
+					Add more things to warcrimes-todo.txt
+						Add more things to warcrimes-todo.txt
+							Add more things to warcrimes-todo.txt
+
+- Con some nerds into contributing to Gehenna Colony map 
+
+- Investigate the "delayed nuke" mode 
+	yknow the gamemode where conspirators are called to do a nuke thing later on? that one. 
+		- "nuclear conspiracy" seems to be the working title
+		- Hardmode conspirators are given an agent card and one random low-value syndicate item
+		- They do not know each others identities 
+		- They are told to soften up / sabotage some of the station in preparation for some big 'ol task
+		- At 30 minutes, they each recieve a message to meet up at a place. Once they arrive, they're given a task
+		- Usually this task is nuke the station. Sometimes it is not. 
+		- Teamwork ensues
+
+- eat shit and die 
+
+- adjust the grill to work in realtime, grilling a perfect steak is way too hard because it sometimes takes 50 seconds, sometimes 100 seconds, and sometimes 9 and not a second more. 
+
+
+///////////////////////////////////////
+Thoughts and Ideas for The Grill Ending
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+-Grill 7 perfect steaks and hand them to the automaton
+-7 steaks grilled in different adventure zones, each with special properties, each unique items 
+-Add butcherable meat to all the boss critters
+-Bring John along with you to all the areas, have him see you grill the steaks.
+-Give John an AI that allows him to grill of his own volition?
+-Sumerian Steak 
+-Final sequence triggered by grillin a steak on the sun
+-Perhaps grill a steak on the server to trigger a meat-disaster round
+-Alternate ending if John eats all seven steaks in the presence of the automaton 
+-Portable grill hidden in a secret area
+-Riddle themes:
+	*sealing in "the juices"
+	*searing "the meat"
+	*stoking "the coals"
+-New meatstation lore
+-Maybe use the future ship for some time travel, collect the wood of some long dead species of tree and use it to smoke some amazing meat.
+-Turn the sun into a grill?
+
+///////////////////////////////////////
+Plans for the Spacers and their cool Arc
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+- After the rescue, bombini sets up shop in the new extensions to the diner permanently, as thanks.
+	*This begins a revitalisation effort of for the diner, and it begins to become a hub for commerce anew. 
+	*John and Shitty Bill contract a space tug to move the diner to z5 (make this an adventure or RP related event)
+		-This is a big excuse to refurbish the old mining section! 
+- John and company go on more road trips, grilling and 'venturing, more medals to be earned by dragging particular things back to the bus. 
+	*Sol Grill Ending
+	*They discover Gehenna Colony
+	*The Juicers come back!
+	
+	
+//////////////////
+GEHENNA DESIGN DOC
+\\\\\\\\\\\\\\\\\\
+
+||=======================================================================================================
+||In brief: 
+||
+||Setting :
+||A minor planet orbiting the blue star, one orbit closer than Abzu
+||Climate : 
+||Dry, hot, breathable but fairly-low oxygen. Little to no vegetation on the surface. 
+||Heavy radiation outside of the main encampment. Sandstorms occasionally hit the colony itself.
+||Layout : 
+||Scattered buildings on surface, nestled between some rugged terrain. Many buildings constructed from the wreckage of an NT ship, the initial colonists it’s surviving crew. 
+||Tunnels constructed underground in order to travel between key surface buildings. 
+||Centralised power & waste facilities with surface distribution network to other key buildings. 
+||Intended niche : 
+||A true “outdoors” map where the hallways are main street, reminiscent of a gold rush boom town. Plenty of space for people to build their own new buildings, make the town their own, without wrestling with the vacuum of space. A vast underground area to dig out and piece together the various ruins and wrecks on the planet. 
+||=======================================================================================================
+
+More details: 
+
+Layout detail :
+	A few large buildings, with smaller single-department or even single-room sheds surrounding them inside a valley on the desert planet. 
+	Some of the buildings appear to be chunks of an NT ship. Several refits and modifications have been made.
+
+	Beaten-earth paths between buildings where the crew is free to wander, socialise, and build, but only within the safety of the valley. Past the hills, environment turns lethal.
+
+	Salvaged engine equipment form a rudimentary solar farm, and repurposed atmospheric parts provide air-conditioning and scrubbing for various buildings through a network of pipes. A central well provides water to the colony. 
+	A damaged engine serves as a plasma laboratory, it’s TEG destroyed in the crash. 
+
+	Underground (z5), steel-walled tunnels with ladders (or stairs maybe?) have been dug to walk between the largest departments without venturing into the heat. The surrounding earth can be mined for resources and a vast network of procedurally generated pockets and tunnels exist, with some pre-generated structures. Think Oshan trench but marslike in appearance. 
+	Air is cool, almost cold, oxygen dense and moist. Pockets of water exist in the tunnels.
+	Bad things also exist here, critters and junk. The syndicate has a base of operations buried in the ground. Pockets of Plasma, of N2O, and of CO2 present an atmospheric danger.
+
+	Back above ground, the village / colony is sandwiched on all sides by a series of ledges, with snaking paths to get up and above them (and out of the valley). Outside the confines of the valley, radiation suits are a must, and the atmosphere thins out to unbreathable levels. Out here, there are some valuable ores out in the rocks but mostly you’ll find scattered remains from the crash, including some valuable cargo crates and a couple other ships and debris from previous crashes. 
+
+
+Possible mechanics :
+
+	Some alternative engine type, who knows what? Might be a decent place for a nuke, knowing that idk some ships carried a nuclear self-destruct for secrecy reasons, they would have the fissile material necessary to start off. 
+	Geothermal energy can work well here too, just gotta port over the system from Oshan. 
+	
+		ACKSHYUALLY:
+		We solar farm now.
+		Modify sun code to be a little less fucky, then implement a mirror farm and central tower
+		Mirrors need constant manual adjustment for optimal power output, or can be left alone for moderate output and occasional flareups from misaligned beams. 
+		
+		When the sun doesnt shine (at night), players can mine for fuels to burn in a big old timey boiler and keep the solar turbine running. 
+		Don't do both unless you hate yourself.
+
+	Water not available from regular infinite sources such as chem dispensers, instead gotta get it from sinks, showerheads and water fountains, which need to be connected via fluid pipe to the central well in engineering. 
+	Some sort of wastewater treatment too, whether that`s water recycling or just dumping it all into an underground septic tank, could be a good place to hide bodies 
+
+	Gotta stay hydrated! Gehenna runs with thirst motive at all times, (and accelerated thirst on RP1) - This would allow the dastardly to divert / hold ransom the water supply, and disruption of it would cause some actual real hardship. Since breaches are not that big a deal, the disruption in resources becomes the danger. 
+
+	Storms that hurt bad unless you’re inside 
+	Gotta find a way for the storm to figure out which rooms are open to the outside so you can’t just stand on a linoleum floor in the middle of a sandstorm and be like “heh heh take that nature”
+
+	Day/night cycle depending on the time of day of compile. might work as a whole cycle in-round but honestly the lighting updates might kill everything and everyone so i’m not gunning for that.
+	Could probably tie atmospheric temperature to time of day too, who knows 
+
+	Vehicles because vehicles are cool. 
+	Probably based on the mars rover, but ideally something customisable. Cargo tug mechanics would be very very good for getting resources from the irradiated wastelands
+
+	Archaeological tools to dig up and research wrecks from past civilisations coming to the plasma giant? Maybe life on this planet once existed? 
+
+Wanted Assets :
+
+	Wooden Fences, Pikes, scrap steel barriers. All the good land staking stuff. Start a ranch. 
+
+	Livestock would be a cool way to get meat instead of slaughtering monkeys out of a vending machine that presumably hasn't been restocked in 6 years. 
+
+	Deployable furnaces and APCs so the crew can build new stuff underground 
+
+	Cowboy Beepsky
+
+	A ROBUST tileset of beaten earth, sandy desert, and an appropriate asteroid reskin for the underground areas. Like Oshan trench but, yknow, dirt, and not so watery
+
+	Functional atmos heat-exchangers, built like the TEG but in reverse. They take in power, and pump heat from one circuit to the other. 
+
+	Rovers with tugs / some other way of bringing crates back.
+
+Things that have been made for this project:
+
+	New hidden flavor & lore texts revealable by specific scanners, useful for hiding clues. Baked right into atom/ because im an asshole that way.
+
+	Little ledges like in Pokemon where you can hop over them in one direction but not the other, to make the hills easier to build. Also to make nice thoroughfares in the colony center (could use better spritework but hey)
+
+	A system for warping almost-seamlessly between z-levels and sections of the map. Works with line of sight and mirrors viscontents. Does not work with atmos or fluids, kinda jank with bombs. Handwave this somehow. 
+
+
+Put lore tie-ins here :
+https://talktotransformer.com/ has provided the meat 
+(( SEE MARDUK . JPG ))
+
+A bit further from town center, more ruins, see above.
+
+Bill: a voucher you can trade for a bike
+
+What else could we find on Gehenna? Open questions :
+Dunno 
+Was the planet always dry on the surface? Is the subterranean water sign of a previously more lush environment? 
+
+Do we put shrubs and bushes on the surface, or is it decidedly too harsh? Maybe plants can grow in the valley, closer to the water table and shielded from the cosmic radiation of the surface. 
+
+Why did a ship crash here? Does this happen often? Hey baby ;) 
+
+Where is Marduk? To reach ??? TO REACH WHAT ?
+
+//////////////////////////
+How did the ship get here? (I havent even decided which ship- but here's a possible explanation if that ship turns out to be Horizon)
+\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+Bullets
+	NT works on "Horizon Drive", an incredibly irresponsible and unsafe plan to drag a channel entrance directly ahead of the ship with an up-powered mineral magnet
+	Trying to adapt the weird tech behind the current machine holding the wormhole, they manage to build _SOMETHING_ resembling a channel anchor, strap it to the bow of a ship retrofitted with a second engine to power the anchor.
+		Think directly to what they did to move the channel closer to earth ? Literally that, except "Hey if we can move it at all, why can't we move it while we're in-flight?". Nevermind the paradox of blowing wind at your own sails. It's magic.
+	
+	This is bad and does not work great - it's rough as hell, the ship was not retrofitted correctly, and most of the secondary systems fail, leaving Horizon way out in [INSERT SYSTEM HERE], much too far for conventional travel back.
+		Captain decides to make a suicide run home rather than scuttle the ship on unknown lands. Emergency repairs are made and they attempt to beef things up to run on a single engine for the anchor and propulsion. 
+			Midway through return flight, a second engine failure causes the artificial entrance to collapse with the ship inside it. Luckilly the channel is "safe", and they're ejected in the Sol system, somewhere in the kuiper belt, not far from the target exit. Right? Please say Right...
+	!!!!
+	Quantum fuckery. Ha!
+	!!!!
+
+	So through some unknown and better-left-unexplained mishap of folded spacetime, let's say that snapping out-of-existence an entire tee'd-off branch of a wormhole means that the stuff within said wormhole needs to go *somewhere*. By grace of the geometric space just dissipating in what is for all intents and purposes one planck time, the actual ending position of such matter should be fairly probabillistic. 
+	Probabillistic physics + NT patchwork engineering + eldritch magicks = oh no, we're near Sol, but also NOT near Sol.
+	Therefore when the wormhole collapses, Horizon is simultaneously ejected from two(as of yet known) separate exits: One in our own solar system, and one in the frontier, way off course, which crashlands on a minor planet orbiting the red star, unable to communicate due to all the systems failures. By the time they rebuild their comms, the planet's orbit has placed them much too far from the channel and the research installations to reach them, So NT doesn't know about the superposition yet.
+	
+	NT covers up the attempt by destroying the (known) damaged prototype anchor and reassigning NSS Horizon as a stationary research base in the Sol asteroid ring. The other stranded copy is unknown to them until late 2053 when first contact is made sith the survivors after six years in isloation- with the help of a dadly felon and his plucky band of nerds.
+		There is of course further opening here to commit all sorts of spacetime crimes with subsequent channel exits, or call it quits and say "nah it just snapped to the two closest ones". 
+			Or heck, throw all this out and make something esle up! who cares! 
+	
+
+/// HERE THERE BE PROTOTYPES, SNIPPETS, AND THINGS I PLAN TO PUT INTO ACTION \\\ 
+\\\ BEWARE PRESENCE OF PSEUDOCODE AND GENERALLY SHITTY FUCKING PRACTICE HAHA ///
+
+

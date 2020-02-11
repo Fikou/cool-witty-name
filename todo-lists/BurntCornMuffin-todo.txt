@@ -1,0 +1,60 @@
+-Robotics:
+	-Could do for some more content.
+		-Mechanics for implants and cyborg bits:
+			-Powered by glucose in human bloodstream.  Amount of glucose requirement scales with relative power of the enhancement.  Effect ranges from mild hypoglycemia to sucking down protein powder faster than Adam Jenson in the heat of battle.
+			-Failure to meet sugar requirements will engage a failsafe to shut down the parts.  This failsafe can be overridden, in which case the user stands a high chance of fainting should they not acquire sustenance.
+		- X-arms
+			- Attach item to arm to make the arm entirely dedicated to that item.  For cyborgs, this means that the slot for that arm is used for the item in that arm, and cannot be unloaded.  For humans, this means that the arm is permanently holding that item.
+			- Special steps should be taken to ensure that gun-arms aren't going to be constant and annoying.  Since every sec and their mother is going to want a stun-baton arm, a sec swipe wouldn't be enough.
+				- Could have a sort of 'research' system where the roboticist researches drivers for cybernetic limbs, implants, and cyborg enhancements.  That way, should terrible inventions occur, they'll occur long after everything has gone to hell anyway. (Maybe roll enhancements in with that, too?)
+				- Added benefit of having somebody competing with genetics for research funds.
+		-Implants: Actually, implants has a pretty good framework already.  Time to think of some awesome implants for the roboticist to make.  Also, need a research minigame.  Maybe a puzzle where you match circuit boards to neurons?
+			- Implant types:
+				- HealMAX auto-healing implant: Slowly regain brute/fireloss, but at a massive glucose cost while healing.
+				- Pacemaker: Subject immune to heart failure, light glucose cost.  Has no failsafe.
+				- MetaboLIVE: Metabolizes reagents quickly, heals tox.  Free when consuming reagents, but a light to medium glucose cost otherwise.
+				- Reflex Implant <Needs a better name>: High chance of attacks missing, but uses a massive burst of glucose to do so.
+				- Carbon Nasal Filter: Makes CO2 breathable, burning moderate glucose while doing so
+				- Sight implants: Restores/enhances sight.  Selectable Thermal, x-ray mode?  Low glucose cost.
+				- Grounding Nanomatrix: stun time vastly reduced (maybe resist entirely?) Low glucose cost.
+				- Sunglasses implant: Because why the fuck not?  Small glucose cost to turn them on or off.
+				- RespawnMe implant: alerts security and medical when you die with where you died. Very small glucose cost
+				- Colorskin: change peoples skin colors! (note: risk of creepy blue people roleplay a possibility)
+				- Teleporter Remote: Teleporter automatically locks on and receives when the user says the key phrase, regardless of context.  This key phrase should be distinct, but common enough to cause hilarious accidental receive incidents. Low glucose cost.
+				- Marathon Implant: Run fast.  Medium glucose cost.
+				- Sensei Robustnik's Black Belt in a Shot: Disarms, Punches, Grabs are enhanced and more effective.  However, large glucose cost.
+				-I'm sure we can think of more.
+		- More robots
+			-Vendorbot - Vending machine + treads.  Trundles the halls and attempts to sell its wares.  Emagged causes it to do so...aggressively.  Programmable personalities, reloadable stock, hacking allows selection of where profits go, in terms of accounts.
+			-...I'll think of more...
+	-If they don't already, EMP grenades should do terrible things to cyborg limbs of any kind.
+-Engineering
+    -Heat transfer engine(Current)
+    	Pros:
+            Sufficiently difficult/nuanced
+            Involves fire.
+        Cons:
+            Too safe - not enough fatal or fun ways to fail spectacularly.  Most spectacular failure comes from running it perfectly.
+            Too well understood by players
+            Boring.  If people bother to run it, they usually start burning and fuck off after it's burned enough to stave off a power outage for the round.
+
+    Need to come up with a replacement that accomplishes the following:
+        - Sufficiently ss13-sci-fi to fit in.
+        - Can fail in fun ways.  Magnitude of failure should scale with the volitility of fuels/power generated, suggesting an advanced player who is up for a challenge.
+        - Requires care: but should accomplish this via fun and not by chores.  More care required depending on volatility/output.
+	- Simple enough for a newbie to run, but complex enough that only the spergiest can fully understand it.
+	-Make it an easy and worthwhile target for traitors to do terrible things to, be it simply break and deny the station power, or cause a catastrophic failure with some effort.
+	-This appears to be being worked on by others.  By worked on, I mean cogwerk's engine doc is still in the #ss13code topic.
+
+-Science
+    -Toxins should really have more things to do with plasma than burn it and make bombs.
+        -What does plasma exposure do to X?
+        -Small scale research plasma reactor of sorts? <-- That particle research idea could tie in really well with that.  Maybe have this eventually turn into a new engine on the next map?
+
+-Security
+
+-Economy
+
+-General
+    -Implement more lag.
+	

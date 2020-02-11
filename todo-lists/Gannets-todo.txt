@@ -1,0 +1,38 @@
+//////////////////////////////////////////////////////////////
+/* <([['u') The Forever Growing Sprite To-Do List ('u']])> */
+/////////////////////////////////////////////////////////////
+
+kremlin
+- snooker
+- also nuke engine stuff
+
+mbc/flourish
+- sealab sprites, more plants for seabotany, fish directions
+
+mbc
+- gross half digested food wad
+- 8 directional pods/tanks/ae86/admin bus/basically all vwehicles
+- body, tracks/wheels, weapons in 3 layers
+
+flourish
+- more reel-to-reel tape
+- hi tech gun? neutrino gun, pepper spray gun
+- Hos dress, alt, dress-alt in the new colour palette
+- suicide belt resprite
+- wallet
+- headbands - like flowers and antenae and stuff
+
+Keelin
+- massive old god for keelin, tentacle boss monster
+- keelin food icon 15x15
+- ritual stuff? gosh probably something else.
+- jumpsuit rewards for sec + janitor. 2 stages.
+
+mordent
+- squares for every kind of door access, with a letter on 'em
+- example: yellow square with E for engineer
+
+gannets
+- dojozone
+- new titlecard for fullscreen - unique to each map?
+- 2 handed var + sprites for existing big guns. Tranq rifle, spacker, grenade launcher.

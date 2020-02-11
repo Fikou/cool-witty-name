@@ -1,0 +1,179 @@
+                                        TOP SECRET // SI // TK // NOFORN // CATS
+
+                             kremlin's atmospherics
+
+the new liquid fluids code in space station 13 is great. already you can sort of
+see people starting to begin to understand how it works and what they can do
+with it, you can hear the gears turn in their head as they concot some hilarious
+and disgusting antics involving various *liquid* fluids. seriously, people are
+going to do some hilarious shit with it
+
+i'll bet you there is the same capacity for fun-having that involves the other
+kind of fluids, gas fluids (gas). in this document i propose a model for a new
+atmospherics system -- katmospherics (KA)
+
+KA is not an immediate fork of FEA, but will use much of the extent FEA code,
+the same objects, and general execution flow (and all the whacky code that gets
+around the race conditions). if you understand FEA you will have no problem
+understanding KA
+
+                                GROUP PROCESSING
+
+KA & FEA both make the same distinction between contiguous regions of connected
+airspace (fluidspace). regions determined NOT to be experieincing Pressure
+Effects (doors opening, pipe bomb, etc) are assigned air_group's which iterate
+through all its turfs and sums the values of each turf's gas values, and then
+divides those huge number by the turf count to get the "average" values. this is
+a capitulation that cheaply approximates the fine-grained simulation FEA/KA can
+provide, but it saves a *lot* of processing time and we don't really care about
+the minute, invisible pressure exchanges when you open a door or fart in the
+wind or whatever, we can throw those out. the other type of reigion, which are
+reigons determined to be experiencing Pressure Events, those are a lot more fun,
+but first:
+
+                            DESIGN THEORY (quickly)
+
+"THE AMOUNT OF ENERGY WITHIN A REGION IS CONSTANT APART FROM ANY ENERGY FLOW
+ACROSS THE BOUNDARIES OF THE REGION." - some science book, or publication
+
+here is where KA begins to (potentially) differ from FEA,
+
+KA minimally classifies and enumerates all regions of contiguous gas-containing
+open turfs. if you are in a sealed room with the door shut, then
+programatically, all the non-wall gas-containing turfs (/turf/simulated/*, etc)
+are members in a list inside an air_group instance. [1]
+
+as described in GROUP PROCESSING the sealed room scenario would revert to a
+group processed approximation state because nothing interesting enough is
+happening to warrant us wasting processing resources finely simulating it. 
+
+an important design aspect of KA will be its boundry processing. read the quote
+at the top of this section, it very succintly describes how boundry processing
+will work, which is probably the most important and critical code component of
+any atmospherics system
+
+before the game *starts*, when not a single tick has ticked, and time is frozen,
+you iterate through the map and create every single air_group instance. they all
+start group-processed, since nothing is happening, everything is sealed, nobody
+is farting, etc. these groups are the genesis of the atmospherics system and
+thereafter will be the chief dataset operated upon. operations are defined any
+boundry events. read the quote again! i have now capitalized it. regions, for
+us, are turfs, the smallest unit of volume available to us. the amount of energy
+in a region, to us, are the characteristic gas values of each turf. we *only
+ever* need to process these values when there is activity at the boundries of
+the region, and KA is chiefly designed around this principle: if you enumerate
+and handle every boundry event, you have simulated an atmosphere, full stop.
+
+i do not yet know how far this drifts from how FEA is designed. what i do know
+is that FEA treats all boundry events equally which means that lots of resouces
+are wasted simulating farts in the wind, events that really could not make a
+difference even scaled by 10. not to diss FEA -- and i'm serious -- it's
+extremely cool code written by someone who you can tell just from the source is
+a scientist. KA is heavily premised on FEA because it's a consistent
+architectural model that is suitable to be developed by an engineer, which is
+all KA is: optimizations, more effecient models, the right™ shortcuts, avoiding
+bizzare idiosyncratic pitfalls of DM, etc)
+
+KA does boundry events differently! without further ado!! :
+
+                                 BOUNDRY EVENTS
+
+regions, or aigroups from now on, have borders of solid, impermeable material
+(like walls). they exist as such in a list that is a member of the airgroup
+object
+
+as time progresses, walls break, doors are opened, windows are toolboxed. these
+border tiles stop becoming borders, and occassionaly, tiles that are not
+impermeable become borders. KA's execution (kremecution) code will (during its
+processor scheduler "atmospherics" tick) iterate over every air group's border
+tile and correctly* and effeciently* compare them to their values during the
+previous tick. after that, the fresh values are copied to the same list we
+compared against for the proceding tick
+
+but, god help us, before they're copied over, they are compared as described,
+and sometimes they have changed state. a door opens, window broken, station
+bombed, etc -- in which case a _boundry event_ has occurred. two sealed-off
+seperated air spaces have become one [2]
+
+boundry events are processed in either one of two ways, as s_events and
+b_events[3] (small events and big events). this determination is made the moment
+the boundry has broken, and involves the following:
+
+if both air_groups are in group_processing mode, quickly reference the
+already-calculated average sums of both air_groups and compare them
+macroscopically. differences in air pressure, temperatures, and other metrics
+are understood as potential energy and calculated accordingly:
+
+        (for pressure)
+
+ΔP = |Pa - Pb|        Pa and Pb already calculated, just pick a turf and use
+                      it's values
+
+Ep = ΔP * Vc          potential energy (Ep) = pressure differntial times a
+                      calculated volume (Vc)[4]. the units work out as pressure (N/m^2) times volume
+                      (m^3) results in joules (Nm)
+
+        (for temperature)
+
+TODO these are likely going to be very complicated because the contributions of
+temperature differential contribute to the overall PE value in an unfun way[5]
+
+-----
+
+if the TOTAL SUMMED VALUE of the PE between the two conjoining airgroups is LESS
+THAN some arbitrary threshold we declare, the the boundry event is an s_event, a
+small event, and many gruesome optmiizations are done to avoid fancifully
+processing a literal fart, or a door opening.
+
+if the TOTAL SUMMED VALUE, however, is MORE THAN the afforementioned arbitrary
+threshold, then the boundry event is classified as a b_event, a big event: jesus
+christ oh god in heaven
+
+big events are where most of the fun is. they cover a lot of ground, any sort of
+non-trivial boundry event will be classified as a b_event, anything more than a
+door opening between to large hallways, for example
+
+the smaller, just-barely-passed-the-threshold b_events will simply unassert
+group processing for both air_groups which are now a single air_group, of
+course. this continues until the PE settles below the threshold
+
+the bigger b_events, the station venting, extreme boundry events are processed
+according to their respective PE breakdown:
+
+high pressure, high temp: fantastic maximal gibbing, fire-explosions, etc.
+
+high pressure, low temp: suck everything through recently-broken boundry by
+turning them into projectiles and hurling them towards the boundry tile. maybe a
+pipe valve is the boundry? maybe spacemen get gruesomely gibbed through pipes,
+or through a grate, there is much room for fun here
+
+low pressure, high temp: some sort of PTL-laser like beam emits scorching people
+to a degree proportional to PE difference
+
+
+...to be continued! 1/29/18
+
+
+                                   KREMNOTES
+                        boring scratchwork! do not read!
+
+* - still need to figure out
+
+[1] - many references increments to many turf instances is many bad for the
+horrible garbage collection del() issue. KA should use qdel() everywhere
+possible
+
+[2] - the way to find the two airgroups affected by a boundry event should
+involve and exploit the fact that the affected boundry-state-changing turf is a
+member exactly twice in two air_group instance's boundry list. figure out how
+byond VM/DM/whatever works and don't redraw air groups, ever! ** never ever
+should air_groups be redrawn like the awful 'fix atmopherics' verb does. KA is
+designed around the premise that it maps air_groups ONCE and everything
+thereafter are boundry events. you can't redraw after the game has begun without
+almost certainly getting some inconsistencies 
+
+[3] - none of these identifier schemes are set in stone yet
+
+[4] - no idea how to calculate this volume
+
+[5] - todo

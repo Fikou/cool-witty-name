@@ -1,0 +1,43 @@
+"a" = (/turf/unsimulated/wall/trench,/area/noGenerate)
+"c" = (/turf/variableTurf/clear,/area/noGenerate)
+"d" = (/turf/unsimulated/wall/adaptive,/area/noGenerate)
+"e" = (/obj/critter/gunbot/drone/raildrone,/turf/variableTurf/clear,/area/noGenerate)
+"f" = (/obj/critter/gunbot/drone,/turf/variableTurf/clear,/area/noGenerate)
+"g" = (/turf/unsimulated/wall/setpieces/leadwall{dir = 9},/area/noGenerate)
+"h" = (/turf/unsimulated/wall/setpieces/leadwall{dir = 4},/area/noGenerate)
+"i" = (/turf/unsimulated/wall/setpieces/leadwall{dir = 5},/area/noGenerate)
+"j" = (/turf/unsimulated/wall/setpieces/leadwall,/area/noGenerate)
+"k" = (/turf/unsimulated/wall/setpieces/leadwall{dir = 10},/area/noGenerate)
+"l" = (/turf/unsimulated/wall/setpieces/leadwall{dir = 6},/area/noGenerate)
+"m" = (/obj/item/clothing/under/misc/turds{desc = "It has an NT logo on it."; name = "NT-S.O. Jumpsuit"},/obj/item/clothing/suit/armor/NT_alt{desc = "It has the Nanotrasen logo on it and an unknown rank insignia."; name = "NT-S.O. Armor"},/obj/item/clothing/head/helmet/NT{desc = "It looks pretty fancy."; name = "NT-S.O. Helmet"},/obj/storage/crate{name = "Dented Crate"},/turf/variableTurf/clear,/area/noGenerate)
+"n" = (/obj/item/skull,/obj/item/raw_material/miracle,/obj/item/raw_material/miracle,/obj/storage/crate{name = "Dented Crate"},/obj/item/shipcomponent/sensor/ecto,/turf/variableTurf/clear,/area/noGenerate)
+"o" = (/obj/storage/crate{name = "Dented Crate"},/obj/item/shieldwallgen,/obj/item/shieldwallgen,/turf/variableTurf/clear,/area/noGenerate)
+"p" = (/obj/decal/cleanable/machine_debris,/obj/item/raw_material/plasmastone,/obj/item/raw_material/plasmastone,/obj/item/raw_material/plasmastone,/obj/item/raw_material/plasmastone,/obj/item/raw_material/plasmastone,/obj/item/raw_material/plasmastone,/obj/storage/crate{name = "Dented Crate"},/obj/item/gun/russianrevolver/fake357,/turf/variableTurf/clear,/area/noGenerate)
+"q" = (/obj/decal/fakeobjects/lighttube_broken{icon_state = "tube-broken"; dir = 8},/obj/item/cell/cerenkite,/obj/storage/crate{name = "Dented Crate"},/obj/item/peripheral/card_scanner/register,/obj/item/clothing/under/gimmick/jetson,/turf/variableTurf/clear,/area/noGenerate)
+"r" = (/obj/item/gun/energy/phaser_gun,/turf/variableTurf/clear,/area/noGenerate)
+"s" = (/obj/item/ammo/power_cell/med_power,/turf/variableTurf/clear,/area/noGenerate)
+"t" = (/turf/unsimulated/wall/trench/side,/area/noGenerate)
+
+(1,1,1) = {"
+cccccccccccghhhhifcccccc
+cccdaadaadajmnopjaadaccc
+cccaaaaaattjqcccjtadaccc
+cccaaatttccjccccjcaaaccc
+cccaatcccccjccrcjctaaccc
+cccaaccecccjcsccjccaaccc
+dccaacccccckhcchlccaaccc
+dccaaccccccccccccccaaccc
+dccttccccccccccccccaaccc
+dcfccccccccccccccccaaccc
+dcccccccccccccccccaaaccd
+dccccccccccccccccctaaccd
+dccaaccccccccccccccttccd
+dccaacccaaaacccccccccfcd
+dccaaaacaaaaaaaccccccccd
+cccaaaaaaaaaaaaaaaaaaccd
+cccttttttttttttttttttccd
+cccccccccccccccccccccccd
+ccccccccccccccccccccccdd
+cccccddddddddddddddddddd
+cccccddddddddddddddddddd
+"}

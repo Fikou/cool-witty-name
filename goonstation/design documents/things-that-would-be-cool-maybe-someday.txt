@@ -1,0 +1,69 @@
+
+/// Want somewhere to shove your big ideas that would be great if someone did them one day? \\\
+|||										Shove them here!									|||
+\\\																							///
+
+
+ECONOMY
+persistent stock market
+rebalance so money actually works
+after the economy is rebalanced : rework spacebux to be eQUAL to credits
+
+GAME INTERACTIONS
+turn pulling into just grabs (mbc : this is something i wanted to do but it will require careful consideration and large revamps because of how important the function of a Pull is (third hand, not a 'real' grab, and messing with other types of clicks if youre on the wrong setting)
+more action progress bars for things like wall building (mbc : many non-combat actionbars take way too long. especially repair jobs)
+add in multiContext menus for EVERYTHING and remove right click from the game
+move ghost options to onscreen buttons (mbc has already written a ghost based abilityholder)
+unify ghost respawn options all in one panel (provide more ghost respawns such as botany slaves and golems etc)
+
+MEDICAL
+implement more organs, organ subtypes, and more detailed organ manipulation
+organ patch
+
+WEAPONS
+standardize damage values so we can have some sembalance of balance
+continue to implement Disorient/Stamina based stuns where it makes things funner
+
+ADVENTURE ZONES
+actually standardize the lore names so we don't have conflicting stuff (unintentionally)
+more endings would be cool
+finish unfinished zones
+Oshan Z3 adventure zone (entire zlevel!!!)
+Oshan trench map gen on round start
+
+
+POWER
+a redesign that's less buggy and simpler would be nice
+nuclear engine vINF?
+
+JOBS
+religion overhaul?
+-rituals?
+matsci incomplete + should be rebalanced cause i heard some stuff is extremely strong without too much investment
+
+ANTAGONISTS
+- Changeling headspider should be player controlled (properly transfer hivemind too!!)
+- Rebalance neurotoxin + spit so that neuro is weaker and spit is stronger. Suggestion : Neurotoxin is slower acting but spit acts as a temporary muzzle after it removes headgear. Not meant to be a nerf, just make abilities more fun.
+- Hivemind should be able to have some ability or basic attack while in horror form
+- Werewolf should have a 3-tiered transformation with more feral sprites. Let them wear clothes at Stage 1 or 2.
+
+
+VISUALS / GRAPHICS
+parallax space (optional)
+AI and cyborgs need distinct chat colors/icons
+Arm missing indicators are super unclear and leg missing indicators dont exist
+
+
+SOUNDS
+mbc eventually wants to make talking sound effects for people standing in your proximity. it's super hard to nail a good voice sample that sounds good + is not intrusive. Of course, players could turn off voice sfx. the idea is that its an audio-based ping to tell you when someone is speaking on-screen.
+Silent space needs murder.
+
+NEW/TRANSFER PLAYER EXPERIENCE
+basic game tutorial?
+
+
+OUT OF GAME EXPERIENCE
+redesign character menu
+unify end of round printouts and screens
+end of round ticket voting in-game should reflect goonhub
+keybinding menu
