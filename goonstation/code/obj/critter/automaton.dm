@@ -190,7 +190,7 @@ var/global/the_automaton = null
 				src.visible_message("<span style=\"color:red\"><b>[src]</b> studies [W] intently for a while, then hands it back.  It doesn't seem to want it in the state it's in.</span>")
 				return
 
-			if (istype(W, /obj/item/reagent_containers/food/snacks/pizza) && W.name == "cheese keyzza") // vOv
+			if (istype(W, /obj/item/reagent_containers/food/snacks/pizza) && W.name == "cheese keyzza") // uWu
 				src.visible_message("<span style=\"color:red\"><b>[src]</b> studies [W] intently for a while, then hands it back.</span>")
 				return
 
